@@ -8,10 +8,27 @@
   
     
   <style> 
-    
+    :root {
+      --bg-color: lightblue;
+      --text-color: black;
+      --heading-color: darkblue;
+      --navbar-bg-:darkblue;
+      --navbar-link:lightblue;
+      --navbar-hover: black;
+    }
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --text-color: #f0f0f0;
+      --heading-color: #bb86fc;
+      --navbar-bg:#222;
+      --navbar-link:#80c0ff;
+      --navbar-hover: #333;
+
+    }
     h1 {
           text-align: center;
-          color: darkblue;
+          color:var (--heading-color);
+
           font-family: 'Times New Roman', Times, serif;
           font-size: 5em;
           margin-bottom: 1em;
@@ -38,16 +55,16 @@
          p {
           font-family:'Times New Roman', Times, serif;
               font-size:1.2em;
-            color:black; } 
+            color: var (--text-color); } 
             .navbar ul{
              list-style-type: none;
-             background-color: darkblue;
+             background-color: var(--navbar-bg);
              padding:0px;
              margin:0px;
              overflow:hidden;
             }
             .navbar a{
-              color:lightblue;
+              color:var(--navbar-link);
               text-decoration: none;
               padding:15px;
               display:block;
@@ -55,9 +72,8 @@
 
             }
             .navbar a:hover{
-              background-color:black;
-
-
+              background-color:var(--navbar-hover);
+             
 
             }
             .navbar li{
@@ -81,6 +97,7 @@
 
   <h1>The Sea Rats Website!</h1>
   <nav class="navbar">
+    <button id="theme-toggle">🌙 Dark Mode</button>
 
     <ul>
       <li><a href="index.html">Home</a></li>
@@ -111,11 +128,29 @@
   <h2>The list of our 3 members! (as of September 12, 2025):</h2>
   <ol>
     <li>AG (CEO and Coder)</li>
-    <li>currently unavailable due to team separation
+    <li>currently unavailable due to team separation (new memmbers will be added soon)
 
     </li>
-    <li>currently unavailable due to team separation</li>
+    <li>currently unavailable due to team separation(new members will be added soon)</li>
   </ol>
+<script>
+  const toggleBtn = document.getElementById('theme-toggle');
+  const currentTheme = local.storage.getItem === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
 
+  if (currentTheme) {
+    document.documentElement.setAttribute("data-theme",currentTheme);
+    toggleBtn.textContent = currentTheme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
+    
+
+    toggleBtn.addEventListener ("click", () => {
+      let theme = document.documentElement.getAttribute("data-theme");
+      let newTheme = theme === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", newTheme)
+      localStorage.setItem ("theme" , newTheme);
+      toggleBtn.textContent = newTheme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
+
+    })
+  }
+</script>
 </body>
 </html>
