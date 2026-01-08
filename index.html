@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,7 +27,7 @@
     }
     h1 {
           text-align: center;
-          color:var (--heading-color);
+          color:var(--heading-color);
 
           font-family: 'Times New Roman', Times, serif;
           font-size: 5em;
@@ -88,13 +88,27 @@
               width: 20%;
               height:20%;
             }
-        </style>
+         /* Dark mode */
+            [data-theme="dark"] {
+    --bg:#0f172a;
+    --text:#e5e7eb;
+    --card:1e293b;
     
+     
+   } body {
+    background-color: var(--bg);
+    color: var(--text);
+   } 
+   .card {
+    background-color: var(--card);
+   }
+        </style>
+   
    
   
 </head>
-<body style="background-color:lightblue;">
 
+<body>
   <h1>The Sea Rats Website!</h1>
   <nav class="navbar">
     <button id="theme-toggle">🌙 Dark Mode</button>
@@ -125,32 +139,23 @@
     Currently in progress
   </ul>
 
-  <h2>The list of our 3 members! (as of September 12, 2025):</h2>
+  <h2>The list of our 3 members! (as of Jan, 2026):</h2>
   <ol>
     <li>AG (CEO and Coder)</li>
-    <li>currently unavailable due to team separation (new memmbers will be added soon)
-
-    </li>
-    <li>currently unavailable due to team separation(new members will be added soon)</li>
+    <li>CF</li>
+    <li>MS </li>
+    <li>E</li>
   </ol>
-<script>
-  const toggleBtn = document.getElementById('theme-toggle');
-  const currentTheme = local.storage.getItem === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
 
-  if (currentTheme) {
-    document.documentElement.setAttribute("data-theme",currentTheme);
-    toggleBtn.textContent = currentTheme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
+  <script>
+    const toggle = document.getElementById("theme-toggle");
+    toggle.addEventListener("click", () => {
+    const htmlEl = document.documentElement; // <html> element
+    const current = htmlEl.getAttribute("data-theme");// get current theme
+   const newTheme = current === "dark" ? "light" : "dark"; // switch 
     
-
-    toggleBtn.addEventListener ("click", () => {
-      let theme = document.documentElement.getAttribute("data-theme");
-      let newTheme = theme === "dark" ? "light" : "dark";
-      document.documentElement.setAttribute("data-theme", newTheme)
-      localStorage.setItem ("theme" , newTheme);
-      toggleBtn.textContent = newTheme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
-
-    })
-  }
-</script>
+   htmlEl.setAttribute("data-theme",newTheme); //apply the new theme
+  });
+  </script>
 </body>
 </html>
