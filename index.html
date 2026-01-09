@@ -102,6 +102,16 @@
    .card {
     background-color: var(--card);
    }
+
+   /* game canvas styles */
+   #gameCanvas {
+    display: block;
+    margin: 20px auto;
+    background-color: #0b3c5d;
+    border: 2px solid #0ff;
+
+
+   } 
         </style>
    
    
@@ -133,20 +143,27 @@
     <li><a href="https://seamate.org/"> Seamate</a></li>
     
 
-  <h2> The list of objects in our robot (as of September 12, 2025):</h2>
+  <h2> The list of objects in our robot (as of Jan , 2026):</h2>
   <ul>
     Currently in progress
   </ul>
 
-  <h2>The list of our 3 members! (as of Jan, 2026):</h2>
+  <h2>The list of our 5 members! (as of Jan, 2026):</h2>
   <ol>
     <li>AG (CEO and Coder)</li>
     <li>CF</li>
     <li>MS </li>
     <li>E</li>
+    <li>MS</li>
   </ol>
 
+
+<h2> Underwater Robotics Game </h2>
+
+<canvas id="gameCanvas" width="400" height="600"></canvas> 
+
   <script>
+    // Dark mode code
     const toggle = document.getElementById("theme-toggle");
     toggle.addEventListener("click", () => {
     const htmlEl = document.documentElement; // <html> element
@@ -155,6 +172,11 @@
     
    htmlEl.setAttribute("data-theme",newTheme); //apply the new theme
   });
+  // underwater robotics game code
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "yellow"; 
+  ctx.fillRect(180, 500, 40, 40);
   </script>
 </body>
 </html>
