@@ -175,8 +175,37 @@
   // underwater robotics game code
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
-  ctx.fillStyle = "yellow";
-ctx.fillRect(180, 300, 40, 40);
+  // robot properties
+  let robotY = 300;
+  let robotVelocity =0;
+  const gravity = 0.5;
+  const robotSize = 30;
+
+  // draw the robot 
+
+  function drawRobot () {
+    ctx.fillStyle = "yellow";
+    ctx.fillRect (180, robotY, robotSize, robotSize);
+
+  }
+   // Update physics 
+   function updateRobot () {
+     robotVelocity += gravity; // apply gravity 
+     robotY += robotVelocity;  // move robot
+
+  
+   }
+
+   // main loop 
+    function gameLoop () {
+      ctx.clearRect(0,0, canvas.width, canvas.height); // clear canvas
+      updateRobot();
+      drawRobot();
+      requestAnimationFrame(gameLoop);
+    }
+     
+    //start the game
+    gameLoop();
 
   </script>
 </body>
