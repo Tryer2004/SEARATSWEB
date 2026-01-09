@@ -1,73 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sea Rats Website</title>
-</head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sea Rats Website</title>
+  
+  
+    
+  <style> 
+    :root {
+      --bg-color: lightblue;
+      --text-color: black;
+      --heading-color: darkblue;
+      --navbar-bg-:darkblue;
+      --navbar-link:lightblue;
+      --navbar-hover: black;
+    }
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --text-color: #f0f0f0;
+      --heading-color: #bb86fc;
+      --navbar-bg:#222;
+      --navbar-link:#80c0ff;
+      --navbar-hover: #333;
 
-    <style> 
-    
-        h1 {
+    }
+    h1 {
+          text-align: center;
+          color:var(--heading-color);
+
+          font-family: 'Times New Roman', Times, serif;
+          font-size: 5em;
+          margin-bottom: 1em;
+          margin-top: 0em;
+        }
+        h2 {
+          color: darkred;
+          font-family: 'Times New Roman', Times, serif;
+          font-size: 2em;
+          margin-bottom: 0.5em;
+          margin-top: 0.5em;
+        }
+        h3 {
+          color: darkgreen;
+          font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+          font-size: 1.5em;
+          margin-bottom: 0.5em;
+          margin-top: 0.5em;
+        }
+        img {
+          width: 10%;
+          height:10
+        }
+         p {
+          font-family:'Times New Roman', Times, serif;
+              font-size:1.2em;
+            color: var (--text-color); } 
+            .navbar ul{
+             list-style-type: none;
+             background-color: var(--navbar-bg);
+             padding:0px;
+             margin:0px;
+             overflow:hidden;
+            }
+            .navbar a{
+              color:var(--navbar-link);
+              text-decoration: none;
+              padding:15px;
+              display:block;
               text-align: center;
-              color: darkblue;
-              font-family: 'Times New Roman', Times, serif;
-              font-size: 5em;
-              margin-bottom: 1em;
-              margin-top: 0em;
+
             }
-            h2 {
-              color: darkred;
-              font-family: 'Times New Roman', Times, serif;
-              font-size: 2em;
-              margin-bottom: 0.5em;
-              margin-top: 0.5em;
+            .navbar a:hover{
+              background-color:var(--navbar-hover);
+             
+
             }
-            h3 {
-              color: darkgreen;
-              font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-              font-size: 1.5em;
-              margin-bottom: 0.5em;
-              margin-top: 0.5em;
+            .navbar li{
+              float:left;
+
             }
-            img {
-              width: 10%;
-              height:10
+            main{
+              margin-left: 20px;
+              margin-right:20px;
             }
-             p {
-              font-family:'Times New Roman', Times, serif;
-                  font-size:1.2em;
-                color:black; } 
-                .navbar ul{
-                 list-style-type: none;
-                 background-color: darkblue;
-                 padding:0px;
-                 margin:0px;
-                 overflow:hidden;
-                }
-                .navbar a{
-                  color:lightblue;
-                  text-decoration: none;
-                  padding:15px;
-                  display:block;
-                  text-align: center;
-    
-                }
-                .navbar a:hover{
-                  background-color:black;
-    
-    
-    
-                }
-                .navbar li{
-                  float:left;
-    
-                }
-                main{
-                  margin-left: 20px;
-                  margin-right:20px;
-                }
-                 /* Dark mode */
+            img{
+              width: 20%;
+              height:20%;
+            }
+         /* Dark mode */
             [data-theme="dark"] {
     --bg:#0f172a;
     --text:#e5e7eb;
@@ -81,29 +102,51 @@
    .card {
     background-color: var(--card);
    }
-            </style>
-    <h1> The Donation Page!</h1>
-    <nav class="navbar">
-      <button id="theme-toggle">🌙 Dark Mode</button>
+        </style>
+   
+   
+  
+</head>
 
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="Donate.html">Donate</a></li>
-        </ul>
-      </nav>
-    <p>I am not accepting donations, but what you can do is donate to St Judes research hospital to help with the battle with cancer and other diseases that might cause harm to children.St Jude is a great place to donate to help unfortunate kids, so what are you waiting for, donate to St Jude today!
-    </p>
+<body>
+  <h1>The Sea Rats Website!</h1>
+  <nav class="navbar">
+    <button id="theme-toggle">🌙 Dark Mode</button>
+
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="Donate.html">Donate</a></li>
+    </ul>
+  </nav>
+  <main>
+  <h3>This is the home page of the Sea Rats Website.</h3>
+  </main>
+
+  <h2>This is a site coded by one of our engineers!</h2>
+  <p>This site will describe what and how the Sea Rats work!(this site is in beta and will have frequent updates)</p>
+
+  <p>The Sea Rats are a company created back in 2024. They were founded to compete in the SeaMate ROV competition. In the annual competition, they won all awards at the Scout level and now compete in the Ranger level.Our theme in the 2025 season for SeaMate was Monitering and Mitigating the ocean.Lets analyse this text, Monitering means to look and check, and mitigating means to stop.This means this years theme is about watching and putting an end to climate change.This website was created as a personal try at coding, and if you want to try coding and want to create your own website, my advice is to not give up and keep going.During the SeaMate competition we only scored a total of 115 points throughout 2 trys, But we got the most points from the presintition and our Marketing Display (which we worked on the most), which made us win the competition.During the competition we were missing our collegue Cody Simpson and we were behind schedule,but we were able to do so much work by 1. staying afterschool to work on it and 2. putting lots of effort everyday for 1 week.</p>
+
+  <h2 >Check out the SeaMate website!</h2>
+  <ul>
+    <li><a href="https://seamate.org/"> Seamate</a></li>
     
-    <h2><a href="https://www.stjude.org/donate/">St Jude</a></h2>
-    <p> you can also donate to unicef which helps to provide food, water and clothing to children who need it!</p>
-    <h2> <a href= "https://www.unicefusa.org/?form=donate">Unicef</a> </h2>
-    <p> another great organization to donate to is Feeding America, Feeding America prioritizes providing food to those in need. Espicially after the government shutdown</p>
-    <h2> <a href= "https://give.feedingamerica.org/a/donate?oa_onsite_promo=header">Feeding America</a></h2>
-    <p> Habitat of Humanity is an organization which specializes in providing housing  to families  who need it, they do this by building and repairing homes. </p>
-    <h2> <a href= "https://secure.habitat.org/site/Donation2?df_id=8135&mfc_pref=T&7753.donation=form1&keyword=button-header-single&s_subsrc=button-header-single&8135.donation=form1&s_src=DNAW26071166201&mrasn=1542191.1922439.excd4Bvm">Habitat for Humanity</a></h2>
-    <p> I greatly encourage you to donate to one of these sources, as they would apprciate it greatly, remember even 1 dollar makes a change</p>
-   <script>
+
+  <h2> The list of objects in our robot (as of September 12, 2025):</h2>
+  <ul>
+    Currently in progress
+  </ul>
+
+  <h2>The list of our 3 members! (as of Jan, 2026):</h2>
+  <ol>
+    <li>AG (CEO and Coder)</li>
+    <li>CF</li>
+    <li>MS </li>
+    <li>E</li>
+  </ol>
+
+  <script>
     const toggle = document.getElementById("theme-toggle");
     toggle.addEventListener("click", () => {
     const htmlEl = document.documentElement; // <html> element
