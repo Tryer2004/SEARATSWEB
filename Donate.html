@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sea Rats Website</title>
 </head>
-<body style=" background-color: lightblue;">
+
     <style> 
     
         h1 {
@@ -67,6 +67,20 @@
                   margin-left: 20px;
                   margin-right:20px;
                 }
+                 /* Dark mode */
+            [data-theme="dark"] {
+    --bg:#0f172a;
+    --text:#e5e7eb;
+    --card:1e293b;
+    
+     
+   } body {
+    background-color: var(--bg);
+    color: var(--text);
+   } 
+   .card {
+    background-color: var(--card);
+   }
             </style>
     <h1> The Donation Page!</h1>
     <nav class="navbar">
@@ -81,6 +95,15 @@
     <p>I am not accepting donations, but what you can do is donate to St Judes research hospital to help with the battle with cancer and other diseases that might cause harm to children.St Jude is a great place to donate to help unfortunate kids, so what are you waiting for, donate to St Jude today!
     </p>
     <h2><a href="https://www.stjude.org/donate/">St Jude</a></h2>
-   
+   <script>
+    const toggle = document.getElementById("theme-toggle");
+    toggle.addEventListener("click", () => {
+    const htmlEl = document.documentElement; // <html> element
+    const current = htmlEl.getAttribute("data-theme");// get current theme
+   const newTheme = current === "dark" ? "light" : "dark"; // switch 
+    
+   htmlEl.setAttribute("data-theme",newTheme); //apply the new theme
+  });
+  </script>
 </body>
 </html>
