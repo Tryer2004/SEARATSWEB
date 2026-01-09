@@ -181,13 +181,24 @@
   const gravity = 0.5;
   const robotSize = 30;
 
-  // draw the robot 
+  function drawRobot() {
+  // Body (submarine/ROV)
+  ctx.fillStyle = "#facc15";
+  ctx.fillRect(170, robotY, 40, 25);
 
-  function drawRobot () {
-    ctx.fillStyle = "yellow";
-    ctx.fillRect (180, robotY, robotSize, robotSize);
+  // Window
+  ctx.fillStyle = "#38bdf8";
+  ctx.fillRect(180, robotY + 5, 10, 10);
 
-  }
+  // Thruster bubble
+  ctx.fillStyle = "rgba(255,255,255,0.6)";
+  ctx.beginPath();
+  ctx.arc(165, robotY + 12, 4, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+  
+
    // Update physics 
    function updateRobot () {
      robotVelocity += gravity; // apply gravity 
@@ -206,6 +217,19 @@
      
     //start the game
     gameLoop();
+
+
+    //Thruster strength (jump)
+    const thrust = -8;
+    // control: spacebar or mouse click 
+    document.addEventListener ("keydown" , (e) => {
+      if(e.code === "Space") {
+        robotVelocity = thrust;
+      }
+    });
+    canvas.addEventListener( "click" , () => {
+      robotVelocity = thrust;
+    });
 
   </script>
 </body>
