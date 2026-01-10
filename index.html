@@ -302,8 +302,8 @@ function resetGame() {
   robotVelocity = 0;
   obstacles.length = 0;
   score = 0;
-  let frameCount = 0;
-  let obstacleSpeed = 2;
+   frameCount = 0;
+   obstacleSpeed = 2;
   gameOver = false;
   gameOverHandled = false;
 }
@@ -338,9 +338,12 @@ function gameLoop() {
 
   drawRobot();
   drawUI();
+ 
 
-  frameCount++;
-  if (frameCount % 500 === 0) obstacleSpeed += 0.4;
+   if (!gameOver && frameCount > 0 && frameCount % 500 === 0) {
+     obstacleSpeed += 0.5;
+   }
+   frameCount++;
 
   requestAnimationFrame(gameLoop);
 }
