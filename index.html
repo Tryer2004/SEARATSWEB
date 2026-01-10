@@ -172,13 +172,14 @@
     
    htmlEl.setAttribute("data-theme",newTheme); //apply the new theme
   });
-  // ===== CANVAS SETUP =====
+ // ===== CANVAS SETUP =====
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 // ===== ROBOT (PLAYER) =====
 let robotY = 300;
 let robotVelocity = 0;
+const robotSize = 25;
 const gravity = 0.5;
 const thrust = -8;
 
@@ -186,6 +187,7 @@ const thrust = -8;
 let gameOver = false;
 let frameCount = 0;
 let score = 0;
+let highscore = localStorage.getItem("highScore") || 0;
 
 // ===== OBSTACLES =====
 const obstacles = [];
@@ -195,7 +197,6 @@ const obstacleSpeed = 2;
 
 // ===== BUBBLES =====
 const bubbles = [];
-
 for (let i = 0; i < 25; i++) {
   bubbles.push({
     x: Math.random() * canvas.width,
@@ -210,15 +211,12 @@ for (let i = 0; i < 25; i++) {
 // Draw bubbles (background)
 function drawBubbles() {
   ctx.fillStyle = "rgba(255,255,255,0.35)";
-
   bubbles.forEach(bubble => {
     bubble.y -= bubble.speed;
-
     if (bubble.y < -10) {
       bubble.y = canvas.height + 10;
       bubble.x = Math.random() * canvas.width;
     }
-
     ctx.beginPath();
     ctx.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI * 2);
     ctx.fill();
@@ -227,47 +225,27 @@ function drawBubbles() {
 
 // Create obstacle
 function createObstacle() {
-  const gapY =
-    Math.random() * (canvas.height - obstacleGap - 100) + 50;
-
-  obstacles.push({
-    x: canvas.width,
-    gapY: gapY,
-    passed: false
-  });
+  const gapY = Math.random() * (canvas.height - obstacleGap - 50) + 25;
+  obstacles.push({ x: canvas.width, gapY: gapY, passed: false });
 }
 
 // Draw obstacles
 function drawObstacles() {
   ctx.fillStyle = "#065f46";
-
   obstacles.forEach(ob => {
-    // top
-    ctx.fillRect(ob.x, 0, obstacleWidth, ob.gapY);
-    // bottom
-    ctx.fillRect(
-      ob.x,
-      ob.gapY + obstacleGap,
-      obstacleWidth,
-      canvas.height
-    );
-
+    ctx.fillRect(ob.x, 0, obstacleWidth, ob.gapY); // top
+    ctx.fillRect(ob.x, ob.gapY + obstacleGap, obstacleWidth, canvas.height); // bottom
     ob.x -= obstacleSpeed;
   });
 }
 
 // Draw robot
 function drawRobot() {
-  // body
-  ctx.fillStyle = "#facc15";
-  ctx.fillRect(170, robotY, 40, 25);
-
-  // window
-  ctx.fillStyle = "#38bdf8";
+  ctx.fillStyle = "#facc15"; // body
+  ctx.fillRect(170, robotY, 40, robotSize);
+  ctx.fillStyle = "#38bdf8"; // window
   ctx.fillRect(180, robotY + 5, 10, 10);
-
-  // thruster bubble
-  ctx.fillStyle = "rgba(255,255,255,0.6)";
+  ctx.fillStyle = "rgba(255,255,255,0.6)"; // thruster bubble
   ctx.beginPath();
   ctx.arc(165, robotY + 12, 4, 0, Math.PI * 2);
   ctx.fill();
@@ -279,43 +257,44 @@ function updateRobot() {
   robotY += robotVelocity;
 }
 
-// Collision + score
+// Check collisions and score
 function checkCollision() {
-  if (robotY < 0 || robotY + 25 > canvas.height) {
-    gameOver = true;
-  }
+  if (robotY < 0 || robotY + robotSize > canvas.height) gameOver = true;
 
   obstacles.forEach(ob => {
     if (170 < ob.x + obstacleWidth && 210 > ob.x) {
-      if (
-        robotY < ob.gapY ||
-        robotY + 25 > ob.gapY + obstacleGap
-      ) {
+      if (robotY < ob.gapY || robotY + robotSize > ob.gapY + obstacleGap) {
         gameOver = true;
       }
     }
-
     if (!ob.passed && ob.x + obstacleWidth < 170) {
       ob.passed = true;
       score++;
+
+      //update highscore while passing obstacles
+
+      if (score > highscore) {
+        highscore = score;
+        localStorage.setItem("highScore", highscore);
+      }
     }
   });
 }
 
-// UI
+// Draw UI
 function drawUI() {
   ctx.fillStyle = "white";
   ctx.font = "20px sans-serif";
   ctx.fillText("Score: " + score, 20, 30);
+  ctx.fillText("Highscore: " + highscore, 20, 60);
+
 
   if (gameOver) {
     ctx.fillStyle = "rgba(0,0,0,0.6)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
     ctx.fillStyle = "white";
     ctx.font = "30px sans-serif";
     ctx.fillText("GAME OVER", 90, 280);
-
     ctx.font = "16px sans-serif";
     ctx.fillText("Press Space to Restart", 95, 320);
   }
@@ -333,14 +312,10 @@ function resetGame() {
 // ===== CONTROLS =====
 document.addEventListener("keydown", e => {
   if (e.code === "Space") {
-    if (gameOver) {
-      resetGame();
-    } else {
-      robotVelocity = thrust;
-    }
+    if (gameOver) resetGame();
+    else robotVelocity = thrust;
   }
 });
-
 canvas.addEventListener("click", () => {
   if (!gameOver) robotVelocity = thrust;
 });
@@ -353,11 +328,7 @@ function gameLoop() {
 
   if (!gameOver) {
     updateRobot();
-
-    if (frameCount % 120 === 0) {
-      createObstacle();
-    }
-
+    if (frameCount % 120 === 0) createObstacle();
     drawObstacles();
     checkCollision();
   }
@@ -367,10 +338,14 @@ function gameLoop() {
 
   frameCount++;
   requestAnimationFrame(gameLoop);
+  if (frameCount % 600 === 0) { 
+    obstacleSpeed += 0.2; // increase difficulty
+  }
 }
 
 // START GAME
 gameLoop();
+
 
 </script>
 </body>
