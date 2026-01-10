@@ -172,7 +172,7 @@
     
    htmlEl.setAttribute("data-theme",newTheme); //apply the new theme
   });
-  // underwater robotics game code
+  // underwater robotics game code (canvas)
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
   // robot properties
@@ -180,12 +180,53 @@
   let robotVelocity =0;
   const gravity = 0.5;
   const robotSize = 30;
+  // obstacle properties
+const obstacles = [];
+const obstacleWidth = 50;
+const obstacleGap = 150;
+const obstacleSpeed = 2;
+ // bubbles properties
+  for (let i = 0; i < 25; i++) {
+  bubbles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    radius: Math.random() * 3 + 2,
+    speed: Math.random() * 0.6 + 0.2
+  });
+}
+
+function createObstacle() {
+ const gapY = Math.random () * (canvas.height - obstacleGap - 100) + 50;
+ obstacles.push ({
+x: canvas.width,
+gapY:gapY,
+passed: false,
+ });
+}
 
   function drawRobot() {
   // Body (submarine/ROV)
   ctx.fillStyle = "#facc15";
   ctx.fillRect(170, robotY, 40, 25);
-
+   
+  // draw the bubbles
+  function drawBubbles () {
+    ctx.fillStyle = "rgba (255,255,255,0.35)";
+    bubbles.ForEach (bubble => {
+      // move bubble up 
+      bubble.y -= bubble.speed;
+      // reset bubble if it goes off the top reset to bottom
+      if (bubble.y < -10) {
+        bubble.y = canvas.height + 10;
+        bubble.x = Math.random() * canvas.width;
+      
+      }
+      // draw bubble
+      ctx.beginPath();
+      ctx.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI *2);
+      ctx.fill();
+    })
+  }
   // Window
   ctx.fillStyle = "#38bdf8";
   ctx.fillRect(180, robotY + 5, 10, 10);
@@ -214,12 +255,7 @@
       drawRobot();
       requestAnimationFrame(gameLoop);
     }
-     
-    //start the game
-    gameLoop();
-
-
-    //Thruster strength (jump)
+     //Thruster strength (jump)
     const thrust = -8;
     // control: spacebar or mouse click 
     document.addEventListener ("keydown" , (e) => {
@@ -230,7 +266,37 @@
     canvas.addEventListener( "click" , () => {
       robotVelocity = thrust;
     });
+    //start the game
+    gameLoop();
+    function gameLoop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  // 1️⃣ Background life
+  drawBubbles();
+
+  if (!gameOver) {
+    updateRobot();
+
+    if (frameCount % 120 === 0) {
+      createObstacle();
+    }
+
+    drawObstacles();
+    checkCollision();
+  }
+
+  // 2️⃣ Player
+  drawRobot();
+
+  // 3️⃣ UI
+  drawUI();
+
+  frameCount++;
+  requestAnimationFrame(gameLoop);
+}
+
+   
+    
   </script>
 </body>
 </html>
