@@ -238,11 +238,21 @@ function createObstacle() {
 function drawObstacles() {
   ctx.fillStyle = "#065f46";
   obstacles.forEach(ob => {
+    // top pipe
     ctx.fillRect(ob.x, 0, obstacleWidth, ob.gapY);
-    ctx.fillRect(ob.x, ob.gapY + obstacleGap, obstacleWidth, canvas.height);
+
+    // bottom pipe 
+    ctx.fillRect(
+      ob.x,
+      ob.gapY + obstacleGap,
+      obstacleWidth,
+      canvas.height - (ob.gapY + obstacleGap)
+    );
+
     ob.x -= obstacleSpeed;
   });
 }
+
 
 function drawRobot() {
   ctx.fillStyle = "#facc15"; // body
