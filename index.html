@@ -167,12 +167,7 @@
 
 
 
-<!--Leaderboard-->
-<div style="display: flex; justify-content: center; gap: 40px;">
-<h2>Leaderboard</h2>
-<ol id="leaderboardList"></ol>
-</div>
-</div>
+
 
   <script>
     // Dark mode code
@@ -324,21 +319,7 @@ canvas.addEventListener("click", () => {
   if (!gameOver) robotVelocity = thrust;
 });
 
-// ===== LEADERBOARD PROMPT =====
-function handleLeaderboard() {
-  if (!gameOverHandled) {
-    gameOverHandled = true;
-    let initials = "";
-    while (!initials || initials.length !== 3) {
-      initials = prompt("Enter your 3-letter initials for leaderboard:").toUpperCase();
-    }
-    let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
-    leaderboard.push({ name: initials, score: score });
-    leaderboard.sort((a, b) => b.score - a.score);
-    if (leaderboard.length > 10) leaderboard.pop();
-    localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
-  }
-}
+
 
 // ===== GAME LOOP =====
 function gameLoop() {
@@ -351,9 +332,8 @@ function gameLoop() {
     if (frameCount % 120 === 0) createObstacle();
     drawObstacles();
     checkCollision();
-  } else {
-    handleLeaderboard();
-  }
+  } 
+  
 
   drawRobot();
   drawUI();
@@ -365,7 +345,7 @@ function gameLoop() {
 }
 
 // ===== START GAME =====
-updateLeaderboardDisplay();
+
 gameLoop();
 
 
