@@ -1,128 +1,111 @@
 <!DOCTYPE html>
-<html lang="en"data-theme="dark">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sea Rats Website</title>
-  
-  
-    
   <style> 
     :root {
       --bg-color: lightblue;
       --text-color: black;
       --heading-color: darkblue;
-      --navbar-bg-:darkblue;
-      --navbar-link:lightblue;
+      --navbar-bg: darkblue;
+      --navbar-link: lightblue;
       --navbar-hover: black;
     }
     [data-theme="dark"] {
       --bg-color: #121212;
       --text-color: #f0f0f0;
       --heading-color: #bb86fc;
-      --navbar-bg:#222;
-      --navbar-link:#80c0ff;
+      --navbar-bg: #222;
+      --navbar-link: #80c0ff;
       --navbar-hover: #333;
-
     }
+
     h1 {
-          text-align: center;
-          color:var(--heading-color);
+      text-align: center;
+      color: var(--heading-color);
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 5em;
+      margin-bottom: 1em;
+      margin-top: 0em;
+    }
+    h2 {
+      color: darkred;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 2em;
+      margin-bottom: 0.5em;
+      margin-top: 0.5em;
+    }
+    h3 {
+      color: darkgreen;
+      font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+      font-size: 1.5em;
+      margin-bottom: 0.5em;
+      margin-top: 0.5em;
+    }
+    img {
+      width: 20%;
+      height: 20%;
+    }
+    p {
+      font-family:'Times New Roman', Times, serif;
+      font-size:1.2em;
+      color: var(--text-color);
+    }
+    .navbar ul{
+      list-style-type: none;
+      background-color: var(--navbar-bg);
+      padding:0px;
+      margin:0px;
+      overflow:hidden;
+    }
+    .navbar a{
+      color:var(--navbar-link);
+      text-decoration: none;
+      padding:15px;
+      display:block;
+      text-align: center;
+    }
+    .navbar a:hover{
+      background-color:var(--navbar-hover);
+    }
+    .navbar li{
+      float:left;
+    }
+    main{
+      margin-left: 20px;
+      margin-right:20px;
+    }
 
-          font-family: 'Times New Roman', Times, serif;
-          font-size: 5em;
-          margin-bottom: 1em;
-          margin-top: 0em;
-        }
-        h2 {
-          color: darkred;
-          font-family: 'Times New Roman', Times, serif;
-          font-size: 2em;
-          margin-bottom: 0.5em;
-          margin-top: 0.5em;
-        }
-        h3 {
-          color: darkgreen;
-          font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-          font-size: 1.5em;
-          margin-bottom: 0.5em;
-          margin-top: 0.5em;
-        }
-        img {
-          width: 10%;
-          height:10
-        }
-         p {
-          font-family:'Times New Roman', Times, serif;
-              font-size:1.2em;
-            color: var (--text-color); } 
-            .navbar ul{
-             list-style-type: none;
-             background-color: var(--navbar-bg);
-             padding:0px;
-             margin:0px;
-             overflow:hidden;
-            }
-            .navbar a{
-              color:var(--navbar-link);
-              text-decoration: none;
-              padding:15px;
-              display:block;
-              text-align: center;
+    /* Dark mode */
+    [data-theme="dark"] {
+      --bg:#0f172a;
+      --text:#e5e7eb;
+      --card:#1e293b;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+    } 
+    .card {
+      background-color: var(--card);
+    }
 
-            }
-            .navbar a:hover{
-              background-color:var(--navbar-hover);
-             
-
-            }
-            .navbar li{
-              float:left;
-
-            }
-            main{
-              margin-left: 20px;
-              margin-right:20px;
-            }
-            img{
-              width: 20%;
-              height:20%;
-            }
-         /* Dark mode */
-            [data-theme="dark"] {
-    --bg:#0f172a;
-    --text:#e5e7eb;
-    --card:1e293b;
-    
-     
-   } body {
-    background-color: var(--bg);
-    color: var(--text);
-   } 
-   .card {
-    background-color: var(--card);
-   }
-
-   /* game canvas styles */
-   #gameCanvas {
-    display: block;
-    margin: 20px auto;
-    background-color: #0b3c5d;
-    border: 2px solid #0ff;
-
-
-   } 
-        </style>
-   
-   
-  
+    /* game canvas styles */
+    #gameCanvas {
+      display: block;
+      margin: 20px auto;
+      background-color: #0b3c5d;
+      border: 2px solid #0ff;
+    } 
+  </style>
 </head>
 
 <body>
   <h1>The Sea Rats Website!</h1>
   <nav class="navbar">
     <button id="theme-toggle">🌙 Dark Mode</button>
-
     <ul>
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
@@ -130,20 +113,20 @@
     </ul>
   </nav>
   <main>
-  <h3>This is the home page of the Sea Rats Website.</h3>
+    <h3>This is the home page of the Sea Rats Website.</h3>
   </main>
 
   <h2>This is a site coded by one of our engineers!</h2>
-  <p>This site will describe what and how the Sea Rats work!(this site is in beta and will have frequent updates)</p>
+  <p>This site will describe what and how the Sea Rats work! (this site is in beta and will have frequent updates)</p>
 
-  <p>The Sea Rats are a company created back in 2024. They were founded to compete in the SeaMate ROV competition. In the annual competition, they won all awards at the Scout level and now compete in the Ranger level.Our theme in the 2025 season for SeaMate was Monitering and Mitigating the ocean.Lets analyse this text, Monitering means to look and check, and mitigating means to stop.This means this years theme is about watching and putting an end to climate change.This website was created as a personal try at coding, and if you want to try coding and want to create your own website, my advice is to not give up and keep going.During the SeaMate competition we only scored a total of 115 points throughout 2 trys, But we got the most points from the presintition and our Marketing Display (which we worked on the most), which made us win the competition.During the competition we were missing our collegue Cody Simpson and we were behind schedule,but we were able to do so much work by 1. staying afterschool to work on it and 2. putting lots of effort everyday for 1 week.</p>
+  <p>The Sea Rats are a company created back in 2024. They were founded to compete in the SeaMate ROV competition. In the annual competition, they won all awards at the Scout level and now compete in the Ranger level. Our theme in the 2025 season for SeaMate was Monitoring and Mitigating the ocean. Let's analyze this text: Monitoring means to look and check, and mitigating means to stop. This means this year's theme is about watching and putting an end to climate change. This website was created as a personal try at coding, and if you want to try coding and want to create your own website, my advice is to not give up and keep going. During the SeaMate competition we only scored a total of 115 points throughout 2 tries, but we got the most points from the presentation and our Marketing Display (which we worked on the most), which made us win the competition. During the competition we were missing our colleague Cody Simpson and we were behind schedule, but we were able to do so much work by 1. staying afterschool to work on it and 2. putting lots of effort every day for 1 week.</p>
 
-  <h2 >Check out the SeaMate website!</h2>
+  <h2>Check out the SeaMate website!</h2>
   <ul>
-    <li><a href="https://seamate.org/"> Seamate</a></li>
-    
+    <li><a href="https://seamate.org/">Seamate</a></li>
+  </ul>
 
-  <h2> The list of objects in our robot (as of Jan , 2026):</h2>
+  <h2>The list of objects in our robot (as of Jan, 2026):</h2>
   <ul>
     Currently in progress
   </ul>
@@ -152,236 +135,191 @@
   <ol>
     <li>AG (CEO and Coder)</li>
     <li>CF</li>
-    <li>MS </li>
+    <li>MS</li>
     <li>E</li>
     <li>MS</li>
   </ol>
 
-
-<h2> Underwater Robotics Game </h2>
-<div style= "display: flex; justify-content: center; gap: 40px; ">
-<canvas id="gameCanvas" width="400" height="600"></canvas> 
-
-
-
-
-
-
-
-  <script>
-    // Dark mode code
-    const toggle = document.getElementById("theme-toggle");
-    toggle.addEventListener("click", () => {
-    const htmlEl = document.documentElement; // <html> element
-    const current = htmlEl.getAttribute("data-theme");// get current theme
-   const newTheme = current === "dark" ? "light" : "dark"; // switch 
-    
-   htmlEl.setAttribute("data-theme",newTheme); //apply the new theme
+  <h2>Underwater Robotics Game</h2>
+  <div style="display: flex; justify-content: center; gap: 40px;">
+    <canvas id="gameCanvas" width="400" height="600"></canvas>
+  </div>
+<script>
+  // ===== DARK MODE =====
+  const toggle = document.getElementById("theme-toggle");
+  toggle.addEventListener("click", () => {
+    const htmlEl = document.documentElement;
+    const current = htmlEl.getAttribute("data-theme");
+    const newTheme = current === "dark" ? "light" : "dark";
+    htmlEl.setAttribute("data-theme", newTheme);
   });
-// ===== UNDERWATER ROBOTICS GAME JS =====
 
-// ===== CANVAS SETUP =====
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+  // ===== CANVAS SETUP =====
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
 
-// ===== GAME STATE =====
-let robotY = 300;
-let robotVelocity = 0;
-const robotSize = 25;
-const robotWidth = 40;
-const gravity = 0.5;
-const thrust = -8;
+  // ===== GAME STATE =====
+  let robotY = 300;
+  let robotVelocity = 0;
+  const robotSize = 25;
+  const robotWidth = 40;
+  const gravity = 0.5;
+  const thrust = -8;
 
-let gameOver = false;
-let gameOverHandled = false; // prevent multiple prompts
-let frameCount = 0;
-let score = 0;
-let highscore = parseInt(localStorage.getItem("highScore")) || 0;
+  let gameOver = false;
+  let frameCount = 0;
+  let score = 0;
+  let highscore = parseInt(localStorage.getItem("highScore")) || 0;
 
-// ===== OBSTACLES =====
-const obstacles = [];
-const obstacleWidth = 50;
-const obstacleGap = 160; 
-let obstacleSpeed = 2;
+  // ===== OBSTACLES =====
+  const obstacles = [];
+  const obstacleWidth = 50;
+  const obstacleGap = 160;
+  let obstacleSpeed = 2;
 
-// ===== BUBBLES =====
-const bubbles = [];
-for (let i = 0; i < 25; i++) {
-  bubbles.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    radius: Math.random() * 3 + 2,
-    speed: Math.random() * 0.6 + 0.2
-  });
-}
-
-// ===== FUNCTIONS =====
-function drawBubbles() {
-  ctx.fillStyle = "rgba(255,255,255,0.35)";
-  bubbles.forEach(bubble => {
-    bubble.y -= bubble.speed;
-    if (bubble.y < -10) {
-      bubble.y = canvas.height + 10;
-      bubble.x = Math.random() * canvas.width;
-    }
-    ctx.beginPath();
-    ctx.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI * 2);
-    ctx.fill();
-  });
-}
-
-function createObstacle() {
-  obstacles.push({
-    x: canvas.width,
-    gapY: 200, // FIXED GAP POSITION (for testing)
-    passed: false
-  });
-}
-
-function drawObstacles() {
-  ctx.fillStyle = "#065f46";
-
-  obstacles.forEach(ob => {
-    // TOP PIPE
-    ctx.fillRect(
-      ob.x,
-      0,
-      obstacleWidth,
-      ob.gapY
-    );
-
-    // BOTTOM PIPE
-    ctx.fillRect(
-      ob.x,
-      ob.gapY + obstacleGap,
-      obstacleWidth,
-      canvas.height - (ob.gapY + obstacleGap)
-    );
-
-    ob.x -= obstacleSpeed;
-  });
-}
-
- 
-
-
-
-
-function drawRobot() {
-  ctx.fillStyle = "#facc15"; // body
-  ctx.fillRect(170, robotY, robotWidth, robotSize);
-  ctx.fillStyle = "#38bdf8"; // window
-  ctx.fillRect(180, robotY + 5, 10, 10);
-  ctx.fillStyle = "rgba(255,255,255,0.6)"; // thruster bubble
-  ctx.beginPath();
-  ctx.arc(165, robotY + 12, 4, 0, Math.PI * 2);
-  ctx.fill();
-}
- 
-
-
-
-function updateRobot() {
-  robotVelocity += gravity;
-  robotY += robotVelocity;
-}
-
-function checkCollision() {
-  if (robotY < 0 || robotY + robotSize > canvas.height) {
-    gameOver = true;
+  // ===== BUBBLES =====
+  const bubbles = [];
+  for (let i = 0; i < 25; i++) {
+    bubbles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      radius: Math.random() * 3 + 2,
+      speed: Math.random() * 0.6 + 0.2
+    });
   }
 
-  const robotX = 170;
-
-  obstacles.forEach(ob => {
-    if (
-      robotX + robotWidth > ob.x &&
-      robotX < ob.x + obstacleWidth
-    ) {
-      if (
-        robotY < ob.gapY ||
-        robotY + robotSize > ob.gapY + obstacleGap
-      ) {
-        gameOver = true;
+  // ===== FUNCTIONS =====
+  function drawBubbles() {
+    ctx.fillStyle = "rgba(255,255,255,0.35)";
+    bubbles.forEach(bubble => {
+      bubble.y -= bubble.speed;
+      if (bubble.y < -10) {
+        bubble.y = canvas.height + 10;
+        bubble.x = Math.random() * canvas.width;
       }
+      ctx.beginPath();
+      ctx.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
+
+  function createObstacle() {
+    const gapY = Math.random() * (canvas.height - obstacleGap - 50) + 25;
+    obstacles.push({ x: canvas.width, gapY, passed: false });
+  }
+
+  function drawObstacles() {
+    ctx.fillStyle = "#065f46";
+    obstacles.forEach(ob => {
+      // top pipe
+      ctx.fillRect(ob.x, 0, obstacleWidth, ob.gapY);
+      // bottom pipe
+      ctx.fillRect(ob.x, ob.gapY + obstacleGap, obstacleWidth, canvas.height - (ob.gapY + obstacleGap));
+      ob.x -= obstacleSpeed;
+    });
+  }
+
+  function drawRobot() {
+    ctx.fillStyle = "#facc15";
+    ctx.fillRect(170, robotY, robotWidth, robotSize);
+    ctx.fillStyle = "#38bdf8";
+    ctx.fillRect(180, robotY + 5, 10, 10);
+    ctx.fillStyle = "rgba(255,255,255,0.6)";
+    ctx.beginPath();
+    ctx.arc(165, robotY + 12, 4, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function updateRobot() {
+    robotVelocity += gravity;
+    robotY += robotVelocity;
+  }
+
+  function checkCollision() {
+    if (robotY < 0 || robotY + robotSize > canvas.height) gameOver = true;
+    const robotX = 170;
+    obstacles.forEach(ob => {
+      if (robotX + robotWidth > ob.x && robotX < ob.x + obstacleWidth) {
+        if (robotY < ob.gapY || robotY + robotSize > ob.gapY + obstacleGap) {
+          gameOver = true;
+        }
+      }
+      if (!ob.passed && ob.x + obstacleWidth < robotX) {
+        ob.passed = true;
+        score++;
+        if (score > highscore) {
+          highscore = score;
+          localStorage.setItem("highScore", highscore);
+        }
+      }
+    });
+  }
+
+  function drawUI() {
+    ctx.fillStyle = "white";
+    ctx.font = "20px sans-serif";
+    ctx.fillText("Score: " + Math.floor(score), 20, 30);
+    ctx.fillText("Highscore: " + highscore, 20, 60);
+
+    if (gameOver) {
+      ctx.fillStyle = "rgba(0,0,0,0.6)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "white";
+      ctx.font = "30px sans-serif";
+      ctx.fillText("GAME OVER", 90, 280);
+      ctx.font = "16px sans-serif";
+      ctx.fillText("Press Space to Restart", 95, 320);
+    }
+  }
+
+  function resetGame() {
+    robotY = 300;
+    robotVelocity = 0;
+    obstacles.length = 0;
+    score = 0;
+    frameCount = 0;
+    obstacleSpeed = 2;
+    gameOver = false;
+  }
+
+  // ===== CONTROLS =====
+  document.addEventListener("keydown", e => {
+    if (e.code === "Space") {
+      if (gameOver) resetGame();
+      else robotVelocity = thrust;
     }
   });
-}
 
+  canvas.addEventListener("click", () => {
+    if (!gameOver) robotVelocity = thrust;
+  });
 
-function drawUI() {
-  ctx.fillStyle = "white";
-  ctx.font = "20px sans-serif";
-  ctx.fillText("Score: " + score, 20, 30);
-  ctx.fillText("Highscore: " + highscore, 20, 60);
+  // ===== GAME LOOP =====
+  function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBubbles();
 
-  if (gameOver) {
-    ctx.fillStyle = "rgba(0,0,0,0.6)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "white";
-    ctx.font = "30px sans-serif";
-    ctx.fillText("GAME OVER", 90, 280);
-    ctx.font = "16px sans-serif";
-    ctx.fillText("Press Space to Restart", 95, 320);
+    if (!gameOver) {
+      updateRobot();
+      if (frameCount % 120 === 0) createObstacle();
+      drawObstacles();
+      checkCollision();
+
+      // Increase speed every 5 points
+      obstacleSpeed = 2 + Math.floor(score / 5) * 0.5;
+    }
+
+    drawRobot();
+    drawUI();
+
+    frameCount++;
+    requestAnimationFrame(gameLoop);
   }
-}
 
-function resetGame() {
-  robotY = 300;
-  robotVelocity = 0;
-  obstacles.length = 0;
-  score = 0;
-   frameCount = 0;
-   obstacleSpeed = 2;
-  gameOver = false;
-  gameOverHandled = false;
-}
-
-// ===== CONTROLS =====
-document.addEventListener("keydown", e => {
-  if (e.code === "Space") {
-    if (gameOver) resetGame();
-    else robotVelocity = thrust;
-  }
-});
-
-canvas.addEventListener("click", () => {
-  if (!gameOver) robotVelocity = thrust;
-});
-
-
-
-// ===== GAME LOOP =====
-function gameLoop() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  drawBubbles();
-
-  if (!gameOver) {
-    updateRobot();
-    if (frameCount % 120 === 0) createObstacle();
-    drawObstacles();
-    checkCollision();
-  } 
-  
-
-  drawRobot();
-  drawUI();
- 
-
-   
-
-  requestAnimationFrame(gameLoop);
-}
-
-// ===== START GAME =====
-
-gameLoop();
-
-
-
-
-
+  gameLoop();
 </script>
+
+
+  
 </body>
 </html>
