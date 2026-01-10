@@ -202,7 +202,7 @@ let highscore = parseInt(localStorage.getItem("highScore")) || 0;
 const obstacles = [];
 const obstacleWidth = 50;
 const obstacleGap = 150;
-let obstacleSpeed = 2; // must be let, not const
+let obstacleSpeed = 2; 
 
 // ===== BUBBLES =====
 const bubbles = [];
@@ -247,6 +247,7 @@ function createObstacle() {
 
 
 
+
 function drawRobot() {
   ctx.fillStyle = "#facc15"; // body
   ctx.fillRect(170, robotY, robotWidth, robotSize);
@@ -258,14 +259,19 @@ function drawRobot() {
   ctx.fill();
 }
  
-
 function drawObstacles() {
   ctx.fillStyle = "#065f46";
-  obstacles.forEach(ob => {
-    // top pipe
-    ctx.fillRect(ob.x, 0, obstacleWidth, ob.gapY);
 
-    // bottom pipe 
+  obstacles.forEach(ob => {
+    // TOP PIPE
+    ctx.fillRect(
+      ob.x,
+      0,
+      obstacleWidth,
+      ob.gapY
+    );
+
+    // BOTTOM PIPE 
     ctx.fillRect(
       ob.x,
       ob.gapY + obstacleGap,
@@ -276,6 +282,7 @@ function drawObstacles() {
     ob.x -= obstacleSpeed;
   });
 }
+
 
 
 function updateRobot() {
