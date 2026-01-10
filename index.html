@@ -190,11 +190,7 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-// ===== LEADERBOARD =====
-let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
-let gameOverHandled = false;
-
-// ===== ROBOT (PLAYER) =====
+// ===== GAME STATE =====
 let robotY = 300;
 let robotVelocity = 0;
 const robotSize = 25;
@@ -202,17 +198,17 @@ const robotWidth = 40;
 const gravity = 0.5;
 const thrust = -8;
 
-// ===== GAME STATE =====
 let gameOver = false;
+let gameOverHandled = false; // prevent multiple prompts
 let frameCount = 0;
 let score = 0;
-let highscore = localStorage.getItem("highScore") || 0;
+let highscore = parseInt(localStorage.getItem("highScore")) || 0;
 
 // ===== OBSTACLES =====
 const obstacles = [];
 const obstacleWidth = 50;
 const obstacleGap = 150;
-let obstacleSpeed = 2; // changed from const to let
+let obstacleSpeed = 2; // must be let, not const
 
 // ===== BUBBLES =====
 const bubbles = [];
@@ -226,8 +222,6 @@ for (let i = 0; i < 25; i++) {
 }
 
 // ===== FUNCTIONS =====
-
-// Draw bubbles (background)
 function drawBubbles() {
   ctx.fillStyle = "rgba(255,255,255,0.35)";
   bubbles.forEach(bubble => {
@@ -242,23 +236,20 @@ function drawBubbles() {
   });
 }
 
-// Create obstacle
 function createObstacle() {
   const gapY = Math.random() * (canvas.height - obstacleGap - 50) + 25;
   obstacles.push({ x: canvas.width, gapY: gapY, passed: false });
 }
 
-// Draw obstacles
 function drawObstacles() {
   ctx.fillStyle = "#065f46";
   obstacles.forEach(ob => {
-    ctx.fillRect(ob.x, 0, obstacleWidth, ob.gapY); // top
-    ctx.fillRect(ob.x, ob.gapY + obstacleGap, obstacleWidth, canvas.height); // bottom
+    ctx.fillRect(ob.x, 0, obstacleWidth, ob.gapY);
+    ctx.fillRect(ob.x, ob.gapY + obstacleGap, obstacleWidth, canvas.height);
     ob.x -= obstacleSpeed;
   });
 }
 
-// Draw robot
 function drawRobot() {
   ctx.fillStyle = "#facc15"; // body
   ctx.fillRect(170, robotY, robotWidth, robotSize);
@@ -270,13 +261,11 @@ function drawRobot() {
   ctx.fill();
 }
 
-// Update robot physics
 function updateRobot() {
   robotVelocity += gravity;
   robotY += robotVelocity;
 }
 
-// Check collisions and score
 function checkCollision() {
   if (robotY < 0 || robotY + robotSize > canvas.height) gameOver = true;
 
@@ -297,7 +286,6 @@ function checkCollision() {
   });
 }
 
-// Draw UI
 function drawUI() {
   ctx.fillStyle = "white";
   ctx.font = "20px sans-serif";
@@ -315,14 +303,13 @@ function drawUI() {
   }
 }
 
-// Reset game
 function resetGame() {
   robotY = 300;
   robotVelocity = 0;
   obstacles.length = 0;
   score = 0;
   gameOver = false;
-  gameOverHandled = false; // reset leaderboard prompt for next death
+  gameOverHandled = false;
 }
 
 // ===== CONTROLS =====
@@ -332,50 +319,31 @@ document.addEventListener("keydown", e => {
     else robotVelocity = thrust;
   }
 });
+
 canvas.addEventListener("click", () => {
   if (!gameOver) robotVelocity = thrust;
 });
 
-// ===== LEADERBOARD =====
-function updateLeaderboardDisplay() {
-  const list = document.getElementById("leaderboardList");
-  if (!list) return; // skip if HTML element not found
-  list.innerHTML = "";
-
-  if (leaderboard.length === 0) {
-    list.innerHTML = "<li>Enter a highscore now!</li>";
-    return;
-  }
-
-  leaderboard.forEach(entry => {
-    const li = document.createElement("li");
-    li.textContent = `${entry.name}: ${entry.score}`;
-    list.appendChild(li);
-  });
-}
-
+// ===== LEADERBOARD PROMPT =====
 function handleLeaderboard() {
   if (!gameOverHandled) {
     gameOverHandled = true;
-    if (score > 0) {
-      if (leaderboard.length < 10 || score > leaderboard[leaderboard.length - 1].score) {
-        let initials = "";
-        while (!initials || initials.length !== 3) {
-          initials = prompt("Enter your 3-letter initials for the leaderboard:").toUpperCase();
-        }
-        leaderboard.push({ name: initials, score: score });
-        leaderboard.sort((a, b) => b.score - a.score);
-        if (leaderboard.length > 10) leaderboard.pop();
-        localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
-        updateLeaderboardDisplay();
-      }
+    let initials = "";
+    while (!initials || initials.length !== 3) {
+      initials = prompt("Enter your 3-letter initials for leaderboard:").toUpperCase();
     }
+    let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+    leaderboard.push({ name: initials, score: score });
+    leaderboard.sort((a, b) => b.score - a.score);
+    if (leaderboard.length > 10) leaderboard.pop();
+    localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
   }
 }
 
 // ===== GAME LOOP =====
 function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   drawBubbles();
 
   if (!gameOver) {
@@ -391,16 +359,16 @@ function gameLoop() {
   drawUI();
 
   frameCount++;
-  if (frameCount % 500 === 0) {
-    obstacleSpeed += 0.4; // difficulty increases over time
-  }
+  if (frameCount % 500 === 0) obstacleSpeed += 0.4;
 
   requestAnimationFrame(gameLoop);
 }
 
 // ===== START GAME =====
-updateLeaderboardDisplay(); // display any saved scores at start
+updateLeaderboardDisplay();
 gameLoop();
+
+
 
 
 
