@@ -159,10 +159,22 @@
 
 
 <h2> Underwater Robotics Game </h2>
-
+<div style= "display: flex; justify-content: center; gap: 40px; ">
 <canvas id="gameCanvas" width="400" height="600"></canvas> 
 
-  <script>
+<div id="gameCanvas" style="color: white; font-family: sans-serif;">
+
+
+
+
+<!--Leaderboard-->
+<div style="display: flex; justify-content: center; gap: 40px;">
+<h2>Leaderboard</h2>
+<ol id="leaderboardList"></ol>
+</div>
+</div>
+
+  <script src="game.js">
     // Dark mode code
     const toggle = document.getElementById("theme-toggle");
     toggle.addEventListener("click", () => {
@@ -172,14 +184,21 @@
     
    htmlEl.setAttribute("data-theme",newTheme); //apply the new theme
   });
- // ===== CANVAS SETUP =====
+// ===== UNDERWATER ROBOTICS GAME JS =====
+
+// ===== CANVAS SETUP =====
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
+
+// ===== LEADERBOARD =====
+let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+let gameOverHandled = false;
 
 // ===== ROBOT (PLAYER) =====
 let robotY = 300;
 let robotVelocity = 0;
 const robotSize = 25;
+const robotWidth = 40;
 const gravity = 0.5;
 const thrust = -8;
 
@@ -193,7 +212,7 @@ let highscore = localStorage.getItem("highScore") || 0;
 const obstacles = [];
 const obstacleWidth = 50;
 const obstacleGap = 150;
-const obstacleSpeed = 2;
+let obstacleSpeed = 2; // changed from const to let
 
 // ===== BUBBLES =====
 const bubbles = [];
@@ -242,7 +261,7 @@ function drawObstacles() {
 // Draw robot
 function drawRobot() {
   ctx.fillStyle = "#facc15"; // body
-  ctx.fillRect(170, robotY, 40, robotSize);
+  ctx.fillRect(170, robotY, robotWidth, robotSize);
   ctx.fillStyle = "#38bdf8"; // window
   ctx.fillRect(180, robotY + 5, 10, 10);
   ctx.fillStyle = "rgba(255,255,255,0.6)"; // thruster bubble
@@ -262,7 +281,7 @@ function checkCollision() {
   if (robotY < 0 || robotY + robotSize > canvas.height) gameOver = true;
 
   obstacles.forEach(ob => {
-    if (170 < ob.x + obstacleWidth && 210 > ob.x) {
+    if (170 < ob.x + obstacleWidth && 170 + robotWidth > ob.x) {
       if (robotY < ob.gapY || robotY + robotSize > ob.gapY + obstacleGap) {
         gameOver = true;
       }
@@ -270,9 +289,6 @@ function checkCollision() {
     if (!ob.passed && ob.x + obstacleWidth < 170) {
       ob.passed = true;
       score++;
-
-      //update highscore while passing obstacles
-
       if (score > highscore) {
         highscore = score;
         localStorage.setItem("highScore", highscore);
@@ -287,7 +303,6 @@ function drawUI() {
   ctx.font = "20px sans-serif";
   ctx.fillText("Score: " + score, 20, 30);
   ctx.fillText("Highscore: " + highscore, 20, 60);
-
 
   if (gameOver) {
     ctx.fillStyle = "rgba(0,0,0,0.6)";
@@ -307,6 +322,7 @@ function resetGame() {
   obstacles.length = 0;
   score = 0;
   gameOver = false;
+  gameOverHandled = false; // reset leaderboard prompt for next death
 }
 
 // ===== CONTROLS =====
@@ -320,10 +336,46 @@ canvas.addEventListener("click", () => {
   if (!gameOver) robotVelocity = thrust;
 });
 
+// ===== LEADERBOARD =====
+function updateLeaderboardDisplay() {
+  const list = document.getElementById("leaderboardList");
+  if (!list) return; // skip if HTML element not found
+  list.innerHTML = "";
+
+  if (leaderboard.length === 0) {
+    list.innerHTML = "<li>Enter a highscore now!</li>";
+    return;
+  }
+
+  leaderboard.forEach(entry => {
+    const li = document.createElement("li");
+    li.textContent = `${entry.name}: ${entry.score}`;
+    list.appendChild(li);
+  });
+}
+
+function handleLeaderboard() {
+  if (!gameOverHandled) {
+    gameOverHandled = true;
+    if (score > 0) {
+      if (leaderboard.length < 10 || score > leaderboard[leaderboard.length - 1].score) {
+        let initials = "";
+        while (!initials || initials.length !== 3) {
+          initials = prompt("Enter your 3-letter initials for the leaderboard:").toUpperCase();
+        }
+        leaderboard.push({ name: initials, score: score });
+        leaderboard.sort((a, b) => b.score - a.score);
+        if (leaderboard.length > 10) leaderboard.pop();
+        localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+        updateLeaderboardDisplay();
+      }
+    }
+  }
+}
+
 // ===== GAME LOOP =====
 function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
   drawBubbles();
 
   if (!gameOver) {
@@ -331,20 +383,25 @@ function gameLoop() {
     if (frameCount % 120 === 0) createObstacle();
     drawObstacles();
     checkCollision();
+  } else {
+    handleLeaderboard();
   }
 
   drawRobot();
   drawUI();
 
   frameCount++;
-  requestAnimationFrame(gameLoop);
-  if (frameCount % 500 === 0) { 
-    obstacleSpeed += 0.4; // increase difficulty
+  if (frameCount % 500 === 0) {
+    obstacleSpeed += 0.4; // difficulty increases over time
   }
+
+  requestAnimationFrame(gameLoop);
 }
 
-// START GAME
+// ===== START GAME =====
+updateLeaderboardDisplay(); // display any saved scores at start
 gameLoop();
+
 
 
 </script>
