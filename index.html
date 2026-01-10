@@ -172,21 +172,31 @@
     
    htmlEl.setAttribute("data-theme",newTheme); //apply the new theme
   });
-  // underwater robotics game code (canvas)
-  const canvas = document.getElementById("gameCanvas");
-  const ctx = canvas.getContext("2d");
-  // robot properties
-  let robotY = 300;
-  let robotVelocity =0;
-  const gravity = 0.5;
-  const robotSize = 30;
-  // obstacle properties
+  // ===== CANVAS SETUP =====
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+// ===== ROBOT (PLAYER) =====
+let robotY = 300;
+let robotVelocity = 0;
+const gravity = 0.5;
+const thrust = -8;
+
+// ===== GAME STATE =====
+let gameOver = false;
+let frameCount = 0;
+let score = 0;
+
+// ===== OBSTACLES =====
 const obstacles = [];
 const obstacleWidth = 50;
 const obstacleGap = 150;
 const obstacleSpeed = 2;
- // bubbles properties
-  for (let i = 0; i < 25; i++) {
+
+// ===== BUBBLES =====
+const bubbles = [];
+
+for (let i = 0; i < 25; i++) {
   bubbles.push({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
@@ -195,64 +205,150 @@ const obstacleSpeed = 2;
   });
 }
 
-function createObstacle() {
- const gapY = Math.random () * (canvas.height - obstacleGap - 100) + 50;
- obstacles.push ({
-x: canvas.width,
-gapY:gapY,
-passed: false,
- });
+// ===== FUNCTIONS =====
+
+// Draw bubbles (background)
+function drawBubbles() {
+  ctx.fillStyle = "rgba(255,255,255,0.35)";
+
+  bubbles.forEach(bubble => {
+    bubble.y -= bubble.speed;
+
+    if (bubble.y < -10) {
+      bubble.y = canvas.height + 10;
+      bubble.x = Math.random() * canvas.width;
+    }
+
+    ctx.beginPath();
+    ctx.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI * 2);
+    ctx.fill();
+  });
 }
 
-  function drawRobot() {
-  // Body (submarine/ROV)
+// Create obstacle
+function createObstacle() {
+  const gapY =
+    Math.random() * (canvas.height - obstacleGap - 100) + 50;
+
+  obstacles.push({
+    x: canvas.width,
+    gapY: gapY,
+    passed: false
+  });
+}
+
+// Draw obstacles
+function drawObstacles() {
+  ctx.fillStyle = "#065f46";
+
+  obstacles.forEach(ob => {
+    // top
+    ctx.fillRect(ob.x, 0, obstacleWidth, ob.gapY);
+    // bottom
+    ctx.fillRect(
+      ob.x,
+      ob.gapY + obstacleGap,
+      obstacleWidth,
+      canvas.height
+    );
+
+    ob.x -= obstacleSpeed;
+  });
+}
+
+// Draw robot
+function drawRobot() {
+  // body
   ctx.fillStyle = "#facc15";
   ctx.fillRect(170, robotY, 40, 25);
-   
-  // draw the bubbles
-  function drawBubbles () {
-    ctx.fillStyle = "rgba (255,255,255,0.35)";
-    bubbles.ForEach (bubble => {
-      // move bubble up 
-      bubble.y -= bubble.speed;
-      // reset bubble if it goes off the top reset to bottom
-      if (bubble.y < -10) {
-        bubble.y = canvas.height + 10;
-        bubble.x = Math.random() * canvas.width;
-      
-      }
-      // draw bubble
-      ctx.beginPath();
-      ctx.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI *2);
-      ctx.fill();
-    })
-  }
-  // Window
+
+  // window
   ctx.fillStyle = "#38bdf8";
   ctx.fillRect(180, robotY + 5, 10, 10);
 
-  // Thruster bubble
+  // thruster bubble
   ctx.fillStyle = "rgba(255,255,255,0.6)";
   ctx.beginPath();
   ctx.arc(165, robotY + 12, 4, 0, Math.PI * 2);
   ctx.fill();
 }
 
-  
+// Update robot physics
+function updateRobot() {
+  robotVelocity += gravity;
+  robotY += robotVelocity;
+}
 
-   // Update physics 
-   function updateRobot () {
-     robotVelocity += gravity; // apply gravity 
-     robotY += robotVelocity;  // move robot
+// Collision + score
+function checkCollision() {
+  if (robotY < 0 || robotY + 25 > canvas.height) {
+    gameOver = true;
+  }
 
-  
-   }
+  obstacles.forEach(ob => {
+    if (170 < ob.x + obstacleWidth && 210 > ob.x) {
+      if (
+        robotY < ob.gapY ||
+        robotY + 25 > ob.gapY + obstacleGap
+      ) {
+        gameOver = true;
+      }
+    }
 
-   // main loop 
-    function gameLoop() {
+    if (!ob.passed && ob.x + obstacleWidth < 170) {
+      ob.passed = true;
+      score++;
+    }
+  });
+}
+
+// UI
+function drawUI() {
+  ctx.fillStyle = "white";
+  ctx.font = "20px sans-serif";
+  ctx.fillText("Score: " + score, 20, 30);
+
+  if (gameOver) {
+    ctx.fillStyle = "rgba(0,0,0,0.6)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "white";
+    ctx.font = "30px sans-serif";
+    ctx.fillText("GAME OVER", 90, 280);
+
+    ctx.font = "16px sans-serif";
+    ctx.fillText("Press Space to Restart", 95, 320);
+  }
+}
+
+// Reset game
+function resetGame() {
+  robotY = 300;
+  robotVelocity = 0;
+  obstacles.length = 0;
+  score = 0;
+  gameOver = false;
+}
+
+// ===== CONTROLS =====
+document.addEventListener("keydown", e => {
+  if (e.code === "Space") {
+    if (gameOver) {
+      resetGame();
+    } else {
+      robotVelocity = thrust;
+    }
+  }
+});
+
+canvas.addEventListener("click", () => {
+  if (!gameOver) robotVelocity = thrust;
+});
+
+// ===== GAME LOOP =====
+function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // 1️⃣ Background life
   drawBubbles();
 
   if (!gameOver) {
@@ -266,34 +362,16 @@ passed: false,
     checkCollision();
   }
 
-  // 2️⃣ Player
   drawRobot();
-
-  // 3️⃣ UI
   drawUI();
 
   frameCount++;
   requestAnimationFrame(gameLoop);
 }
 
+// START GAME
+gameLoop();
 
-//Thruster strength (jump)
-const thrust = -8;
-// control: spacebar or mouse click
-document.addEventListener("keydown", (e) => {
-  if (e.code === "Space") {
-        robotVelocity = thrust;
-      }
-    });
-    canvas.addEventListener( "click" , () => {
-      robotVelocity = thrust;
-    });
-    //start the game
-    gameLoop();
-    
-
-   
-    
-  </script>
+</script>
 </body>
 </html>
