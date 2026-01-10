@@ -201,8 +201,8 @@ let highscore = parseInt(localStorage.getItem("highScore")) || 0;
 // ===== OBSTACLES =====
 const obstacles = [];
 const obstacleWidth = 50;
-const obstacleGap = 150;
-let obstacleSpeed = 2; 
+const obstacleGap = 160; 
+let obstacleSpeed = 2;
 
 // ===== BUBBLES =====
 const bubbles = [];
@@ -230,20 +230,39 @@ function drawBubbles() {
   });
 }
 
-
- 
 function createObstacle() {
-  const minGapY = 80;
-  const maxGapY = canvas.height - obstacleGap - 80;
-
-  const gapY = Math.random() * (maxGapY - minGapY) + minGapY;
-
   obstacles.push({
     x: canvas.width,
-    gapY: gapY,
+    gapY: 200, // FIXED GAP POSITION (for testing)
     passed: false
   });
 }
+
+function drawObstacles() {
+  ctx.fillStyle = "#065f46";
+
+  obstacles.forEach(ob => {
+    // TOP PIPE
+    ctx.fillRect(
+      ob.x,
+      0,
+      obstacleWidth,
+      ob.gapY
+    );
+
+    // BOTTOM PIPE
+    ctx.fillRect(
+      ob.x,
+      ob.gapY + obstacleGap,
+      obstacleWidth,
+      canvas.height - (ob.gapY + obstacleGap)
+    );
+
+    ob.x -= obstacleSpeed;
+  });
+}
+
+ 
 
 
 
@@ -259,29 +278,6 @@ function drawRobot() {
   ctx.fill();
 }
  
-function drawObstacles() {
-  ctx.fillStyle = "#065f46";
-
-  obstacles.forEach(ob => {
-    // TOP PIPE
-    ctx.fillRect(
-      ob.x,
-      0,
-      obstacleWidth,
-      ob.gapY
-    );
-
-    // BOTTOM PIPE 
-    ctx.fillRect(
-      ob.x,
-      ob.gapY + obstacleGap,
-      obstacleWidth,
-      canvas.height - (ob.gapY + obstacleGap)
-    );
-
-    ob.x -= obstacleSpeed;
-  });
-}
 
 
 
