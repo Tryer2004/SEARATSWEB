@@ -230,10 +230,34 @@ function drawBubbles() {
   });
 }
 
+
+ 
 function createObstacle() {
-  const gapY = Math.random() * (canvas.height - obstacleGap - 50) + 25;
-  obstacles.push({ x: canvas.width, gapY: gapY, passed: false });
+  const minGapY = 80;
+  const maxGapY = canvas.height - obstacleGap - 80;
+
+  const gapY = Math.random() * (maxGapY - minGapY) + minGapY;
+
+  obstacles.push({
+    x: canvas.width,
+    gapY: gapY,
+    passed: false
+  });
 }
+
+
+
+function drawRobot() {
+  ctx.fillStyle = "#facc15"; // body
+  ctx.fillRect(170, robotY, robotWidth, robotSize);
+  ctx.fillStyle = "#38bdf8"; // window
+  ctx.fillRect(180, robotY + 5, 10, 10);
+  ctx.fillStyle = "rgba(255,255,255,0.6)"; // thruster bubble
+  ctx.beginPath();
+  ctx.arc(165, robotY + 12, 4, 0, Math.PI * 2);
+  ctx.fill();
+}
+ 
 
 function drawObstacles() {
   ctx.fillStyle = "#065f46";
@@ -254,46 +278,33 @@ function drawObstacles() {
 }
 
 
-function drawRobot() {
-  ctx.fillStyle = "#facc15"; // body
-  ctx.fillRect(170, robotY, robotWidth, robotSize);
-  ctx.fillStyle = "#38bdf8"; // window
-  ctx.fillRect(180, robotY + 5, 10, 10);
-  ctx.fillStyle = "rgba(255,255,255,0.6)"; // thruster bubble
-  ctx.beginPath();
-  ctx.arc(165, robotY + 12, 4, 0, Math.PI * 2);
-  ctx.fill();
-}
-
 function updateRobot() {
   robotVelocity += gravity;
   robotY += robotVelocity;
 }
 
 function checkCollision() {
-  if (robotY < 0 || robotY + robotSize > canvas.height) gameOver = true;
+  if (robotY < 0 || robotY + robotSize > canvas.height) {
+    gameOver = true;
+  }
+
+  const robotX = 170;
 
   obstacles.forEach(ob => {
-    if (170 < ob.x + obstacleWidth && 170 + robotWidth > ob.x) {
-      if (robotY < ob.gapY || robotY + robotSize > ob.gapY + obstacleGap) {
+    if (
+      robotX + robotWidth > ob.x &&
+      robotX < ob.x + obstacleWidth
+    ) {
+      if (
+        robotY < ob.gapY ||
+        robotY + robotSize > ob.gapY + obstacleGap
+      ) {
         gameOver = true;
-      }
-    }
-    if (!ob.passed && ob.x + obstacleWidth < 170) {
-      ob.passed = true;
-      score++;
-       // increase difficulty
-       if (score % 5 === 0) {
-        obstacleSpeed += 0.4;
-       }
-
-      if (score > highscore) {
-        highscore = score;
-        localStorage.setItem("highScore", highscore);
       }
     }
   });
 }
+
 
 function drawUI() {
   ctx.fillStyle = "white";
