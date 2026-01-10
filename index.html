@@ -293,6 +293,18 @@
   canvas.addEventListener("click", () => {
     if (!gameOver) robotVelocity = thrust;
   });
+    
+  // ===== MOBILE TOUCH CONTROLS =====
+canvas.addEventListener("touchstart", (e) => {
+  e.preventDefault(); // stop scrolling
+
+  if (gameOver) {
+    resetGame();
+  } else {
+    robotVelocity = thrust;
+  }
+}, { passive: false });
+
 
   // ===== GAME LOOP =====
   function gameLoop() {
