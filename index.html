@@ -249,25 +249,6 @@ passed: false,
    }
 
    // main loop 
-    function gameLoop () {
-      ctx.clearRect(0,0, canvas.width, canvas.height); // clear canvas
-      updateRobot();
-      drawRobot();
-      requestAnimationFrame(gameLoop);
-    }
-     //Thruster strength (jump)
-    const thrust = -8;
-    // control: spacebar or mouse click 
-    document.addEventListener ("keydown" , (e) => {
-      if(e.code === "Space") {
-        robotVelocity = thrust;
-      }
-    });
-    canvas.addEventListener( "click" , () => {
-      robotVelocity = thrust;
-    });
-    //start the game
-    gameLoop();
     function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -294,6 +275,22 @@ passed: false,
   frameCount++;
   requestAnimationFrame(gameLoop);
 }
+
+
+//Thruster strength (jump)
+const thrust = -8;
+// control: spacebar or mouse click
+document.addEventListener("keydown", (e) => {
+  if (e.code === "Space") {
+        robotVelocity = thrust;
+      }
+    });
+    canvas.addEventListener( "click" , () => {
+      robotVelocity = thrust;
+    });
+    //start the game
+    gameLoop();
+    
 
    
     
