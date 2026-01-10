@@ -103,6 +103,18 @@
 </head>
 
 <body>
+ 
+
+  <div id="offlineStatus" style="
+  text-align: center;
+  font-family: sans-serif;
+  color: #00ffcc;
+  margin-top: 10px;
+  display: none;
+">
+  📴 Offline Mode Enabled
+</div>
+
   <h1>The Sea Rats Website!</h1>
   <nav class="navbar">
     <button id="theme-toggle">🌙 Dark Mode</button>
@@ -146,6 +158,21 @@
     <canvas id="gameCanvas" width="400" height="600"></canvas>
   </div>
 <script>
+
+  const offlineStatus = document.getElementById("offlineStatus");
+
+  function updateOfflineStatus() {
+    if (!navigator.onLine) {
+      offlineStatus.style.display = "block";
+     } else {
+      offlineStatus.style.display = "none";
+     }
+  }
+  window.addEventListener("online" , updateOfflineStatus);
+  window.addEventListener ("offline", updateOfflineStatus);
+  // run when page loads
+  updateOfflineStatus();
+
   // ===== DARK MODE =====
   const toggle = document.getElementById("theme-toggle");
   toggle.addEventListener("click", () => {
@@ -330,6 +357,14 @@ canvas.addEventListener("touchstart", (e) => {
   }
 
   gameLoop();
+
+
+  //register service worker
+if("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/sw.js")
+    .then(() => console.log ("Service Worker Registered"))
+    .catch(err => console.log ("SW failed to register", err));
+}
 </script>
 
 
