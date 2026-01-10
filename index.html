@@ -272,6 +272,11 @@ function checkCollision() {
     if (!ob.passed && ob.x + obstacleWidth < 170) {
       ob.passed = true;
       score++;
+       // increase difficulty
+       if (score % 5 === 0) {
+        obstacleSpeed += 0.4;
+       }
+
       if (score > highscore) {
         highscore = score;
         localStorage.setItem("highScore", highscore);
@@ -340,10 +345,7 @@ function gameLoop() {
   drawUI();
  
 
-   if (!gameOver && frameCount > 0 && frameCount % 500 === 0) {
-     obstacleSpeed += 0.5;
-   }
-   frameCount++;
+   
 
   requestAnimationFrame(gameLoop);
 }
