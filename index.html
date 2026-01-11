@@ -159,6 +159,16 @@
   </div>
 <script>
 let gameState = "start";
+//reduce bubble count on small screens
+const bubbleCount = window.innerWidth < 600 ? 10 : 25;
+
+ // make canvas render nicly but not too much unnessary pixels
+canvas.width = 400 * window.devicePixelRatio;
+canvas.height = 600 * window.devicePixelRatio;
+canvas.style.width = "400px";
+canvas.style.height = "600px";
+ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
 
 // ===== OFFLINE STATUS =====
 const offlineStatus = document.getElementById("offlineStatus");
@@ -221,12 +231,13 @@ for (let i = 0; i < 25; i++) {
 const explosions = [];
 
 function triggerExplosion(x, y) {
+  const particleCount = window.innerWidth < 600 ? 20 : 100; //lower on phones
   explosions.push({
     x: x,
     y: y,
-    size: 100,
+    size: 60,
     frames: 75,
-    particles: 10000,
+    particles: particleCount,
     opacity: 1
   });
 }
