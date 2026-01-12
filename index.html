@@ -216,8 +216,8 @@ const explosionParticles = isIOS ? 10 : 100;
 const bubbles = [];
 for (let i = 0; i < bubbleCount; i++) {
   bubbles.push({
-    x: Math.random() * canvas.width / dpr, // adjust for scale
-    y: Math.random() * canvas.height / dpr,
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
     radius: Math.random() * 3 + 2,
     speed: Math.random() * 0.6 + 0.2
   });
@@ -259,8 +259,8 @@ function drawBubbles() {
   bubbles.forEach(b => {
     b.y -= b.speed;
     if (b.y < -10) {
-      b.y = canvas.height / dpr + 10;
-      b.x = Math.random() * canvas.width / dpr;
+      b.y = canvas.height + 10;
+      b.x = Math.random() * canvas.width;
     }
     ctx.beginPath();
     ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
@@ -271,8 +271,8 @@ function drawBubbles() {
 function createObstacle() {
   const maxChange = 100;
   let gapY = lastGapY + (Math.random() * 2 - 1) * maxChange;
-  gapY = Math.max(25, Math.min(canvas.height / dpr - obstacleGap - 25, gapY));
-  obstacles.push({ x: canvas.width / dpr, gapY, passed: false });
+  gapY = Math.max(25, Math.min(canvas.height - obstacleGap - 25, gapY));
+  obstacles.push({ x: canvas.width, gapY, passed: false });
   lastGapY = gapY;
 }
 
@@ -280,7 +280,7 @@ function drawObstacles() {
   ctx.fillStyle = "#065f46";
   obstacles.forEach(ob => {
     ctx.fillRect(ob.x, 0, obstacleWidth, ob.gapY);
-    ctx.fillRect(ob.x, ob.gapY + obstacleGap, obstacleWidth, canvas.height / dpr - (ob.gapY + obstacleGap));
+    ctx.fillRect(ob.x, ob.gapY + obstacleGap, obstacleWidth, canvas.height - (ob.gapY + obstacleGap));
     ob.x -= obstacleSpeed;
   });
 }
@@ -325,7 +325,7 @@ function checkCollision() {
     }
   });
 
-  if (robotY < 0 || robotY + robotSize > canvas.height / dpr) {
+  if (robotY < 0 || robotY + robotSize > canvas.height) {
     if (gameState !== "exploding" && gameState !== "gameover") {
       triggerExplosion(robotX, robotY + robotSize / 2);
       gameState = "exploding";
@@ -333,7 +333,6 @@ function checkCollision() {
   }
 }
 
-// ===== DRAW UI =====
 function drawUI() {
   ctx.fillStyle = "white";
   ctx.font = "20px sans-serif";
@@ -341,29 +340,25 @@ function drawUI() {
   ctx.fillText("Highscore: " + highscore, 20, 60);
 
   ctx.textAlign = "center";
-
   if (gameState === "start") {
     ctx.fillStyle = "rgba(0,0,0,0.6)";
-    ctx.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr);
-
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "white";
     ctx.font = "28px sans-serif";
-    ctx.fillText("UNDERWATER ROV", canvas.width / (2 * dpr), 280); // moved down slightly
+    ctx.fillText("UNDERWATER ROV", canvas.width / 2, 260);
     ctx.font = "18px sans-serif";
-    ctx.fillText("Tap or Press Space to Start", canvas.width / (2 * dpr), 320);
+    ctx.fillText("Tap or Press Space to Start", canvas.width / 2, 310);
   }
 
   if (gameState === "gameover") {
     ctx.fillStyle = "rgba(0,0,0,0.6)";
-    ctx.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr);
-
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "white";
     ctx.font = "28px sans-serif";
-    ctx.fillText("GAME OVER", canvas.width / (2 * dpr), 280);
+    ctx.fillText("GAME OVER", canvas.width / 2, 260);
     ctx.font = "18px sans-serif";
-    ctx.fillText("Tap or Press Space to Restart", canvas.width / (2 * dpr), 320);
+    ctx.fillText("Tap or Press Space to Restart", canvas.width / 2, 310);
   }
-
   ctx.textAlign = "left";
 }
 
@@ -374,7 +369,7 @@ function resetGame() {
   score = 0;
   frameCount = 0;
   obstacleSpeed = 2;
-  lastGapY = canvas.height / dpr / 2;
+  lastGapY = canvas.height / 2;
   gameState = "playing";
 }
 
@@ -400,7 +395,7 @@ canvas.addEventListener("touchstart", e => {
 
 // ===== GAME LOOP =====
 function gameLoop() {
-  ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   drawBubbles();
 
@@ -429,8 +424,6 @@ if ("serviceWorker" in navigator) {
     .catch(err => console.log("SW failed to register", err));
 }
 </script>
-
-
 
 
 
