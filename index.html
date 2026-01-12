@@ -160,24 +160,15 @@
 <script>
 let gameState = "start";
 
-// ===== CANVAS SETUP =====
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
-
-// Reduce bubble count on small screens
-const bubbleCount = window.innerWidth < 600 ? 10 : 25;
-
-// Make canvas render nicely but not too many unnecessary pixels
-canvas.width = 400 * window.devicePixelRatio;
-canvas.height = 600 * window.devicePixelRatio;
-canvas.style.width = "400px";
-canvas.style.height = "600px";
-ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-
 // ===== OFFLINE STATUS =====
 const offlineStatus = document.getElementById("offlineStatus");
+
 function updateOfflineStatus() {
-  offlineStatus.style.display = navigator.onLine ? "none" : "block";
+  if (!navigator.onLine) {
+    offlineStatus.style.display = "block";
+  } else {
+    offlineStatus.style.display = "none";
+  }
 }
 window.addEventListener("online", updateOfflineStatus);
 window.addEventListener("offline", updateOfflineStatus);
@@ -191,6 +182,10 @@ toggle.addEventListener("click", () => {
   const newTheme = current === "dark" ? "light" : "dark";
   htmlEl.setAttribute("data-theme", newTheme);
 });
+
+// ===== CANVAS SETUP =====
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
 // ===== GAME STATE =====
 let robotY = 300;
@@ -209,14 +204,14 @@ const obstacles = [];
 const obstacleWidth = 50;
 const obstacleGap = 160;
 let obstacleSpeed = 2;
-let lastGapY = canvas.height / window.devicePixelRatio / 2;
+let lastGapY = canvas.height / 2;
 
 // ===== BUBBLES =====
 const bubbles = [];
-for (let i = 0; i < bubbleCount; i++) {
+for (let i = 0; i < 25; i++) {
   bubbles.push({
-    x: Math.random() * (canvas.width / window.devicePixelRatio),
-    y: Math.random() * (canvas.height / window.devicePixelRatio),
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
     radius: Math.random() * 3 + 2,
     speed: Math.random() * 0.6 + 0.2
   });
@@ -224,14 +219,14 @@ for (let i = 0; i < bubbleCount; i++) {
 
 // ===== EXPLOSIONS =====
 const explosions = [];
+
 function triggerExplosion(x, y) {
-  const particleCount = window.innerWidth < 600 ? 20 : 100;
   explosions.push({
     x: x,
     y: y,
-    size: 60,
+    size: 100,
     frames: 75,
-    particles: particleCount,
+    particles: 10000,
     opacity: 1
   });
 }
@@ -246,6 +241,7 @@ function drawExplosions() {
     }
     expl.opacity -= 0.020;
     expl.frames--;
+    expl.size += 2;
     if (expl.frames <= 0) {
       explosions.splice(index, 1);
       if (gameState === "exploding") gameState = "gameover";
@@ -259,8 +255,8 @@ function drawBubbles() {
   bubbles.forEach(bubble => {
     bubble.y -= bubble.speed;
     if (bubble.y < -10) {
-      bubble.y = canvas.height / window.devicePixelRatio + 10;
-      bubble.x = Math.random() * (canvas.width / window.devicePixelRatio);
+      bubble.y = canvas.height + 10;
+      bubble.x = Math.random() * canvas.width;
     }
     ctx.beginPath();
     ctx.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI * 2);
@@ -271,8 +267,8 @@ function drawBubbles() {
 function createObstacle() {
   const maxChange = 100;
   let gapY = lastGapY + (Math.random() * 2 - 1) * maxChange;
-  gapY = Math.max(25, Math.min(canvas.height / window.devicePixelRatio - obstacleGap - 25, gapY));
-  obstacles.push({ x: canvas.width / window.devicePixelRatio, gapY, passed: false });
+  gapY = Math.max(25, Math.min(canvas.height - obstacleGap - 25, gapY));
+  obstacles.push({ x: canvas.width, gapY, passed: false });
   lastGapY = gapY;
 }
 
@@ -280,21 +276,21 @@ function drawObstacles() {
   ctx.fillStyle = "#065f46";
   obstacles.forEach(ob => {
     ctx.fillRect(ob.x, 0, obstacleWidth, ob.gapY);
-    ctx.fillRect(ob.x, ob.gapY + obstacleGap, obstacleWidth, canvas.height / window.devicePixelRatio - (ob.gapY + obstacleGap));
+    ctx.fillRect(ob.x, ob.gapY + obstacleGap, obstacleWidth, canvas.height - (ob.gapY + obstacleGap));
     ob.x -= obstacleSpeed;
   });
 }
 
 function drawRobot() {
-  if (gameState !== "exploding") {
-    ctx.fillStyle = "#facc15";
-    ctx.fillRect(170, robotY, robotWidth, robotSize);
-    ctx.fillStyle = "#38bdf8";
-    ctx.fillRect(180, robotY + 5, 10, 10);
-    ctx.fillStyle = "rgba(255,255,255,0.6)";
-    ctx.beginPath();
-    ctx.arc(165, robotY + 12, 4, 0, Math.PI * 2);
-    ctx.fill();
+  if (gameState !== "exploding"){ // hide robot if it is exploding
+  ctx.fillStyle = "#facc15";
+  ctx.fillRect(170, robotY, robotWidth, robotSize);
+  ctx.fillStyle = "#38bdf8";
+  ctx.fillRect(180, robotY + 5, 10, 10);
+  ctx.fillStyle = "rgba(255,255,255,0.6)";
+  ctx.beginPath();
+  ctx.arc(165, robotY + 12, 4, 0, Math.PI * 2);
+  ctx.fill();
   }
 }
 
@@ -324,7 +320,7 @@ function checkCollision() {
     }
   });
 
-  if (robotY < 0 || robotY + robotSize > canvas.height / window.devicePixelRatio) {
+  if (robotY < 0 || robotY + robotSize > canvas.height) {
     if (gameState !== "exploding" && gameState !== "gameover") {
       triggerExplosion(robotX, robotY + robotSize / 2);
       gameState = "exploding";
@@ -339,29 +335,27 @@ function drawUI() {
   ctx.fillText("Highscore: " + highscore, 20, 60);
 
   ctx.textAlign = "center";
-
   if (gameState === "start") {
     ctx.fillStyle = "rgba(0,0,0,0.6)";
-    ctx.fillRect(0, 0, canvas.width / window.devicePixelRatio, canvas.height / window.devicePixelRatio);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = "white";
     ctx.font = "28px sans-serif";
-    ctx.fillText("UNDERWATER ROV", canvas.width / (2 * window.devicePixelRatio), 260);
+    ctx.fillText("UNDERWATER ROV", canvas.width / 2, 260);
     ctx.font = "18px sans-serif";
-    ctx.fillText("Tap or Press Space to Start", canvas.width / (2 * window.devicePixelRatio), 310);
+    ctx.fillText("Tap or Press Space to Start", canvas.width / 2, 310);
   }
 
   if (gameState === "gameover") {
     ctx.fillStyle = "rgba(0,0,0,0.6)";
-    ctx.fillRect(0, 0, canvas.width / window.devicePixelRatio, canvas.height / window.devicePixelRatio);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = "white";
     ctx.font = "28px sans-serif";
-    ctx.fillText("GAME OVER", canvas.width / (2 * window.devicePixelRatio), 260);
+    ctx.fillText("GAME OVER", canvas.width / 2, 260);
     ctx.font = "18px sans-serif";
-    ctx.fillText("Tap or Press Space to Restart", canvas.width / (2 * window.devicePixelRatio), 310);
+    ctx.fillText("Tap or Press Space to Restart", canvas.width / 2, 310);
   }
-
   ctx.textAlign = "left";
 }
 
@@ -372,16 +366,20 @@ function resetGame() {
   score = 0;
   frameCount = 0;
   obstacleSpeed = 2;
-  lastGapY = canvas.height / window.devicePixelRatio / 2;
+  lastGapY = canvas.height / 2;
   gameState = "playing";
 }
 
 // ===== CONTROLS =====
 document.addEventListener("keydown", e => {
   if (e.code === "Space") {
-    if (gameState === "start") gameState = "playing";
-    else if (gameState === "gameover") resetGame();
-    else if (gameState === "playing") robotVelocity = thrust;
+    if (gameState === "start") {
+      gameState = "playing";
+    } else if (gameState === "gameover") {
+      resetGame();
+    } else if (gameState === "playing") {
+      robotVelocity = thrust;
+    }
   }
 });
 
@@ -389,11 +387,16 @@ canvas.addEventListener("click", () => {
   if (gameState === "playing") robotVelocity = thrust;
 });
 
+// ===== MOBILE TOUCH CONTROLS =====
 canvas.addEventListener("touchstart", e => {
   e.preventDefault();
-  if (gameState === "start") gameState = "playing";
-  else if (gameState === "gameover") resetGame();
-  else if (gameState === "playing") robotVelocity = thrust;
+  if (gameState === "start") {
+    gameState = "playing";
+  } else if (gameState === "gameover") {
+    resetGame();
+  } else if (gameState === "playing") {
+    robotVelocity = thrust;
+  }
 }, { passive: false });
 
 // ===== GAME LOOP =====
@@ -426,7 +429,6 @@ if ("serviceWorker" in navigator) {
     .catch(err => console.log("SW failed to register", err));
 }
 </script>
-
 
 
 
