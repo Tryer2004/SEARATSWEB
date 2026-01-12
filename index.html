@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="cSpgAW3DUKxoqRt7PxECFdx3x6Wi2M1TmVJEvMDh_KU" />
   <title>Sea Rats Website</title>
   <style> 
     :root {
@@ -154,11 +155,24 @@
 
   <h2>Underwater Robotics Game</h2>
   <h3> If your on mobile click on the game to play, on computer just press space or click</h3>
+  <h3> press p to pause</h3>
   <div style="display: flex; justify-content: center; gap: 40px;">
     <canvas id="gameCanvas" width="400" height="600"></canvas>
   </div>
 <script>
 let gameState = "start";
+
+
+//====== PAUSE AND MENU ======//
+let gamePaused = false;
+let scoreMultiplier = 1;
+
+// Create pause menu div
+const pauseMenu = document.createElement ("div");
+pauseMenu.style.position = "fixed";
+pauseMenu.style.top = "0";
+pauseMenu.style.left = "0";
+
 
 // ===== OFFLINE STATUS =====
 const offlineStatus = document.getElementById("offlineStatus");
