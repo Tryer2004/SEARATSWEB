@@ -159,43 +159,18 @@
   </div>
 <script>
 let gameState = "start";
-//reduce bubble count on small screens
-const bubbleCount = window.innerWidth < 600 ? 10 : 25;
-
- // make canvas render nicly but not too much unnessary pixels
-canvas.width = 400 * window.devicePixelRatio;
-canvas.height = 600 * window.devicePixelRatio;
-canvas.style.width = "400px";
-canvas.style.height = "600px";
-ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-
-
-// ===== OFFLINE STATUS =====
-const offlineStatus = document.getElementById("offlineStatus");
-
-function updateOfflineStatus() {
-  if (!navigator.onLine) {
-    offlineStatus.style.display = "block";
-  } else {
-    offlineStatus.style.display = "none";
-  }
-}
-window.addEventListener("online", updateOfflineStatus);
-window.addEventListener("offline", updateOfflineStatus);
-updateOfflineStatus();
-
-// ===== DARK MODE =====
-const toggle = document.getElementById("theme-toggle");
-toggle.addEventListener("click", () => {
-  const htmlEl = document.documentElement;
-  const current = htmlEl.getAttribute("data-theme");
-  const newTheme = current === "dark" ? "light" : "dark";
-  htmlEl.setAttribute("data-theme", newTheme);
-});
 
 // ===== CANVAS SETUP =====
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
+
+// High-DPI scaling
+const dpr = window.devicePixelRatio || 1;
+canvas.width = 400 * dpr;
+canvas.height = 600 * dpr;
+canvas.style.width = "400px";
+canvas.style.height = "600px";
+ctx.scale(dpr, dpr);
 
 // ===== GAME STATE =====
 let robotY = 300;
@@ -217,11 +192,12 @@ let obstacleSpeed = 2;
 let lastGapY = canvas.height / 2;
 
 // ===== BUBBLES =====
+const bubbleCount = window.innerWidth < 600 ? 10 : 25;
 const bubbles = [];
-for (let i = 0; i < 25; i++) {
+for (let i = 0; i < bubbleCount; i++) {
   bubbles.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
+    x: Math.random() * 400,
+    y: Math.random() * 600,
     radius: Math.random() * 3 + 2,
     speed: Math.random() * 0.6 + 0.2
   });
@@ -229,12 +205,10 @@ for (let i = 0; i < 25; i++) {
 
 // ===== EXPLOSIONS =====
 const explosions = [];
-
 function triggerExplosion(x, y) {
-  const particleCount = window.innerWidth < 600 ? 20 : 100; //lower on phones
+  const particleCount = window.innerWidth < 600 ? 20 : 100; // safer on mobile
   explosions.push({
-    x: x,
-    y: y,
+    x, y,
     size: 60,
     frames: 75,
     particles: particleCount,
@@ -245,12 +219,12 @@ function triggerExplosion(x, y) {
 function drawExplosions() {
   explosions.forEach((expl, index) => {
     for (let i = 0; i < 20; i++) {
-      const px = expl.x + (Math.random() - 0.1) * expl.size;
-      const py = expl.y + (Math.random() - 0.1) * expl.size;
+      const px = expl.x + (Math.random() - 0.5) * expl.size;
+      const py = expl.y + (Math.random() - 0.5) * expl.size;
       ctx.fillStyle = `rgba(255,100,0,${expl.opacity})`;
-      ctx.fillRect(px, py, 3, 3);
+      ctx.fillRect(px, py, 4, 4); // bigger pixels
     }
-    expl.opacity -= 0.020;
+    expl.opacity -= 0.03; // faster fade
     expl.frames--;
     expl.size += 2;
     if (expl.frames <= 0) {
@@ -266,8 +240,8 @@ function drawBubbles() {
   bubbles.forEach(bubble => {
     bubble.y -= bubble.speed;
     if (bubble.y < -10) {
-      bubble.y = canvas.height + 10;
-      bubble.x = Math.random() * canvas.width;
+      bubble.y = 610;
+      bubble.x = Math.random() * 400;
     }
     ctx.beginPath();
     ctx.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI * 2);
@@ -278,8 +252,8 @@ function drawBubbles() {
 function createObstacle() {
   const maxChange = 100;
   let gapY = lastGapY + (Math.random() * 2 - 1) * maxChange;
-  gapY = Math.max(25, Math.min(canvas.height - obstacleGap - 25, gapY));
-  obstacles.push({ x: canvas.width, gapY, passed: false });
+  gapY = Math.max(25, Math.min(600 - obstacleGap - 25, gapY));
+  obstacles.push({ x: 400, gapY, passed: false });
   lastGapY = gapY;
 }
 
@@ -287,21 +261,21 @@ function drawObstacles() {
   ctx.fillStyle = "#065f46";
   obstacles.forEach(ob => {
     ctx.fillRect(ob.x, 0, obstacleWidth, ob.gapY);
-    ctx.fillRect(ob.x, ob.gapY + obstacleGap, obstacleWidth, canvas.height - (ob.gapY + obstacleGap));
+    ctx.fillRect(ob.x, ob.gapY + obstacleGap, obstacleWidth, 600 - (ob.gapY + obstacleGap));
     ob.x -= obstacleSpeed;
   });
 }
 
 function drawRobot() {
-  if (gameState !== "exploding"){ // hide robot if it is exploding
-  ctx.fillStyle = "#facc15";
-  ctx.fillRect(170, robotY, robotWidth, robotSize);
-  ctx.fillStyle = "#38bdf8";
-  ctx.fillRect(180, robotY + 5, 10, 10);
-  ctx.fillStyle = "rgba(255,255,255,0.6)";
-  ctx.beginPath();
-  ctx.arc(165, robotY + 12, 4, 0, Math.PI * 2);
-  ctx.fill();
+  if (gameState !== "exploding") {
+    ctx.fillStyle = "#facc15";
+    ctx.fillRect(170, robotY, robotWidth, robotSize);
+    ctx.fillStyle = "#38bdf8";
+    ctx.fillRect(180, robotY + 5, 10, 10);
+    ctx.fillStyle = "rgba(255,255,255,0.6)";
+    ctx.beginPath();
+    ctx.arc(165, robotY + 12, 4, 0, Math.PI * 2);
+    ctx.fill();
   }
 }
 
@@ -330,8 +304,7 @@ function checkCollision() {
       }
     }
   });
-
-  if (robotY < 0 || robotY + robotSize > canvas.height) {
+  if (robotY < 0 || robotY + robotSize > 600) {
     if (gameState !== "exploding" && gameState !== "gameover") {
       triggerExplosion(robotX, robotY + robotSize / 2);
       gameState = "exploding";
@@ -348,24 +321,22 @@ function drawUI() {
   ctx.textAlign = "center";
   if (gameState === "start") {
     ctx.fillStyle = "rgba(0,0,0,0.6)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+    ctx.fillRect(0, 0, 400, 600);
     ctx.fillStyle = "white";
     ctx.font = "28px sans-serif";
-    ctx.fillText("UNDERWATER ROV", canvas.width / 2, 260);
+    ctx.fillText("UNDERWATER ROV", 200, 260);
     ctx.font = "18px sans-serif";
-    ctx.fillText("Tap or Press Space to Start", canvas.width / 2, 310);
+    ctx.fillText("Tap or Press Space to Start", 200, 310);
   }
 
   if (gameState === "gameover") {
     ctx.fillStyle = "rgba(0,0,0,0.6)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+    ctx.fillRect(0, 0, 400, 600);
     ctx.fillStyle = "white";
     ctx.font = "28px sans-serif";
-    ctx.fillText("GAME OVER", canvas.width / 2, 260);
+    ctx.fillText("GAME OVER", 200, 260);
     ctx.font = "18px sans-serif";
-    ctx.fillText("Tap or Press Space to Restart", canvas.width / 2, 310);
+    ctx.fillText("Tap or Press Space to Restart", 200, 310);
   }
   ctx.textAlign = "left";
 }
@@ -377,20 +348,16 @@ function resetGame() {
   score = 0;
   frameCount = 0;
   obstacleSpeed = 2;
-  lastGapY = canvas.height / 2;
+  lastGapY = 300;
   gameState = "playing";
 }
 
 // ===== CONTROLS =====
 document.addEventListener("keydown", e => {
   if (e.code === "Space") {
-    if (gameState === "start") {
-      gameState = "playing";
-    } else if (gameState === "gameover") {
-      resetGame();
-    } else if (gameState === "playing") {
-      robotVelocity = thrust;
-    }
+    if (gameState === "start") gameState = "playing";
+    else if (gameState === "gameover") resetGame();
+    else if (gameState === "playing") robotVelocity = thrust;
   }
 });
 
@@ -398,21 +365,16 @@ canvas.addEventListener("click", () => {
   if (gameState === "playing") robotVelocity = thrust;
 });
 
-// ===== MOBILE TOUCH CONTROLS =====
 canvas.addEventListener("touchstart", e => {
   e.preventDefault();
-  if (gameState === "start") {
-    gameState = "playing";
-  } else if (gameState === "gameover") {
-    resetGame();
-  } else if (gameState === "playing") {
-    robotVelocity = thrust;
-  }
+  if (gameState === "start") gameState = "playing";
+  else if (gameState === "gameover") resetGame();
+  else if (gameState === "playing") robotVelocity = thrust;
 }, { passive: false });
 
 // ===== GAME LOOP =====
 function gameLoop() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, 400, 600);
   drawBubbles();
 
   if (gameState === "playing") {
@@ -432,13 +394,6 @@ function gameLoop() {
 }
 
 gameLoop();
-
-// ===== SERVICE WORKER =====
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/sw.js")
-    .then(() => console.log("Service Worker Registered"))
-    .catch(err => console.log("SW failed to register", err));
-}
 </script>
 
 
