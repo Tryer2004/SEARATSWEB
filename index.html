@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="google-site-verification" content="cSpgAW3DUKxoqRt7PxECFdx3x6Wi2M1TmVJEvMDh_KU" />
   <title>Sea Rats Website</title>
   <style> 
     :root {
@@ -79,7 +78,6 @@
       margin-right:20px;
     }
 
-    /* Dark mode */
     [data-theme="dark"] {
       --bg:#0f172a;
       --text:#e5e7eb;
@@ -93,7 +91,6 @@
       background-color: var(--card);
     }
 
-    /* game canvas styles */
     #gameCanvas {
       display: block;
       margin: 20px auto;
@@ -104,19 +101,8 @@
 </head>
 
 <body>
- 
 
-  <div id="offlineStatus" style="
-  text-align: center;
-  font-family: sans-serif;
-  color: #00ffcc;
-  margin-top: 10px;
-  display: none;
-">
-  📴 Offline Mode Enabled
-</div>
-
-  <h1>The Sea Rats Website!</h1>
+ <h1>The Sea Rats Website!</h1>
   <nav class="navbar">
     <button id="theme-toggle">🌙 Dark Mode</button>
     <ul>
@@ -153,22 +139,20 @@
     <li>MS</li>
   </ol>
 
-  <h2>Underwater Robotics Game</h2>
-  <h3> If your on mobile click on the game to play, on computer just press space or click</h3>
-  <h3> press escape (or esc on the top left of the keyboard) to pause</h3>
-  <div style="display: flex; justify-content: center; gap: 40px;">
-    <canvas id="gameCanvas" width="400" height="600"></canvas>
-  </div>
+<h2>Underwater Robotics Game</h2>
+<h3>If you're on mobile click on the game to play, on computer just press space or click</h3>
+<h3>Press escape (or ESC) to pause</h3>
+<div style="display: flex; justify-content: center; gap: 40px;">
+  <canvas id="gameCanvas" width="400" height="600"></canvas>
+</div>
+
 <script>
 let gameState = "start";
 let gameSpeedMultiplier = 1;
-
-//====== PAUSE AND MENU SETTINGS ======//
-
 let gamePaused = false;
-let scoreMultiplier = 1; // default 1x
+let scoreMultiplier = 1;
 
-// Create pause menu div
+// ===== PAUSE MENU =====
 const pauseMenu = document.createElement("div");
 pauseMenu.style.position = "fixed";
 pauseMenu.style.top = "0";
@@ -177,7 +161,7 @@ pauseMenu.style.width = "100%";
 pauseMenu.style.height = "100%";
 pauseMenu.style.backgroundColor = "rgba(0,0,0,0.8)";
 pauseMenu.style.color = "white";
-pauseMenu.style.display = "none"; // hidden by default
+pauseMenu.style.display = "none";
 pauseMenu.style.flexDirection = "column";
 pauseMenu.style.alignItems = "center";
 pauseMenu.style.justifyContent = "center";
@@ -186,11 +170,9 @@ pauseMenu.style.zIndex = "1000";
 pauseMenu.style.textAlign = "center";
 document.body.appendChild(pauseMenu);
 
-// Score display
 const pauseScore = document.createElement("h2");
 pauseMenu.appendChild(pauseScore);
 
-// Buttons
 const resumeBtn = document.createElement("button");
 resumeBtn.textContent = "Resume";
 resumeBtn.style.fontSize = "1.5em";
@@ -203,7 +185,6 @@ settingsBtn.style.fontSize = "1.5em";
 settingsBtn.style.margin = "10px";
 pauseMenu.appendChild(settingsBtn);
 
-// Settings panel
 const settingsPanel = document.createElement("div");
 settingsPanel.style.display = "none";
 settingsPanel.style.flexDirection = "column";
@@ -211,7 +192,6 @@ settingsPanel.style.alignItems = "center";
 settingsPanel.style.marginTop = "20px";
 pauseMenu.appendChild(settingsPanel);
 
-// Speed options
 const speedLabel = document.createElement("h3");
 speedLabel.textContent = "Game Speed:";
 settingsPanel.appendChild(speedLabel);
@@ -231,7 +211,7 @@ speeds.forEach(mult => {
 function togglePause() {
   gamePaused = !gamePaused;
   pauseMenu.style.display = gamePaused ? "flex" : "none";
-  settingsPanel.style.display = "none"; // hide settings when pausing
+  settingsPanel.style.display = "none";
   pauseScore.textContent = "Score: " + Math.floor(score);
 }
 
@@ -240,24 +220,53 @@ settingsBtn.onclick = () => {
   settingsPanel.style.display = settingsPanel.style.display === "none" ? "flex" : "none";
 };
 
-// Pause on Escape key
 document.addEventListener("keydown", e => {
   if (e.code === "Escape") {
     togglePause();
   }
 });
 
+// ===== CANVAS SETUP =====
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
+// ===== MOBILE PAUSE BUTTON (FIXED) =====
+const pauseButton = document.createElement("button");
+pauseButton.textContent = "⏸";
+pauseButton.style.position = "absolute";
+pauseButton.style.fontSize = "2em";
+pauseButton.style.zIndex = "1000";
+pauseButton.style.background = "rgba(0,0,0,0.5)";
+pauseButton.style.color = "white";
+pauseButton.style.border = "none";
+pauseButton.style.borderRadius = "5px";
+pauseButton.style.padding = "5px 10px";
+document.body.appendChild(pauseButton);
+
+function updatePauseButtonPosition() {
+  const rect = canvas.getBoundingClientRect();
+  pauseButton.style.top = rect.top + window.scrollY + 10 + "px";
+  pauseButton.style.left = rect.left + window.scrollX + rect.width - 50 + "px";
+}
+
+pauseButton.addEventListener("click", togglePause);
+
+window.addEventListener("resize", updatePauseButtonPosition);
+window.addEventListener("scroll", updatePauseButtonPosition);
+updatePauseButtonPosition();
 
 // ===== OFFLINE STATUS =====
-const offlineStatus = document.getElementById("offlineStatus");
+const offlineStatus = document.createElement("div");
+offlineStatus.style.textAlign = "center";
+offlineStatus.style.fontFamily = "sans-serif";
+offlineStatus.style.color = "#00ffcc";
+offlineStatus.style.marginTop = "10px";
+offlineStatus.style.display = "none";
+offlineStatus.textContent = "📴 Offline Mode Enabled";
+document.body.appendChild(offlineStatus);
 
 function updateOfflineStatus() {
-  if (!navigator.onLine) {
-    offlineStatus.style.display = "block";
-  } else {
-    offlineStatus.style.display = "none";
-  }
+  offlineStatus.style.display = navigator.onLine ? "none" : "block";
 }
 window.addEventListener("online", updateOfflineStatus);
 window.addEventListener("offline", updateOfflineStatus);
@@ -268,13 +277,8 @@ const toggle = document.getElementById("theme-toggle");
 toggle.addEventListener("click", () => {
   const htmlEl = document.documentElement;
   const current = htmlEl.getAttribute("data-theme");
-  const newTheme = current === "dark" ? "light" : "dark";
-  htmlEl.setAttribute("data-theme", newTheme);
+  htmlEl.setAttribute("data-theme", current === "dark" ? "light" : "dark");
 });
-
-// ===== CANVAS SETUP =====
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
 
 // ===== GAME STATE =====
 let robotY = 300;
@@ -288,14 +292,12 @@ let frameCount = 0;
 let score = 0;
 let highscore = parseInt(localStorage.getItem("highScore")) || 0;
 
-// ===== OBSTACLES =====
 const obstacles = [];
 const obstacleWidth = 50;
 const obstacleGap = 160;
 let obstacleSpeed = 2;
 let lastGapY = canvas.height / 2;
 
-// ===== BUBBLES =====
 const bubbles = [];
 for (let i = 0; i < 25; i++) {
   bubbles.push({
@@ -306,9 +308,7 @@ for (let i = 0; i < 25; i++) {
   });
 }
 
-// ===== EXPLOSIONS =====
 const explosions = [];
-
 function triggerExplosion(x, y) {
   explosions.push({
     x: x,
@@ -338,7 +338,6 @@ function drawExplosions() {
   });
 }
 
-// ===== FUNCTIONS =====
 function drawBubbles() {
   ctx.fillStyle = "rgba(255,255,255,0.35)";
   bubbles.forEach(bubble => {
@@ -371,15 +370,15 @@ function drawObstacles() {
 }
 
 function drawRobot() {
-  if (gameState !== "exploding"){ // hide robot if it is exploding
-  ctx.fillStyle = "#facc15";
-  ctx.fillRect(170, robotY, robotWidth, robotSize);
-  ctx.fillStyle = "#38bdf8";
-  ctx.fillRect(180, robotY + 5, 10, 10);
-  ctx.fillStyle = "rgba(255,255,255,0.6)";
-  ctx.beginPath();
-  ctx.arc(165, robotY + 12, 4, 0, Math.PI * 2);
-  ctx.fill();
+  if (gameState !== "exploding"){
+    ctx.fillStyle = "#facc15";
+    ctx.fillRect(170, robotY, robotWidth, robotSize);
+    ctx.fillStyle = "#38bdf8";
+    ctx.fillRect(180, robotY + 5, 10, 10);
+    ctx.fillStyle = "rgba(255,255,255,0.6)";
+    ctx.beginPath();
+    ctx.arc(165, robotY + 12, 4, 0, Math.PI * 2);
+    ctx.fill();
   }
 }
 
@@ -462,13 +461,9 @@ function resetGame() {
 // ===== CONTROLS =====
 document.addEventListener("keydown", e => {
   if (e.code === "Space") {
-    if (gameState === "start") {
-      gameState = "playing";
-    } else if (gameState === "gameover") {
-      resetGame();
-    } else if (gameState === "playing") {
-      robotVelocity = thrust;
-    }
+    if (gameState === "start") gameState = "playing";
+    else if (gameState === "gameover") resetGame();
+    else if (gameState === "playing") robotVelocity = thrust;
   }
 });
 
@@ -476,21 +471,16 @@ canvas.addEventListener("click", () => {
   if (gameState === "playing") robotVelocity = thrust;
 });
 
-// ===== MOBILE TOUCH CONTROLS =====
 canvas.addEventListener("touchstart", e => {
   e.preventDefault();
-  if (gameState === "start") {
-    gameState = "playing";
-  } else if (gameState === "gameover") {
-    resetGame();
-  } else if (gameState === "playing") {
-    robotVelocity = thrust;
-  }
+  if (gameState === "start") gameState = "playing";
+  else if (gameState === "gameover") resetGame();
+  else if (gameState === "playing") robotVelocity = thrust;
 }, { passive: false });
 
 // ===== GAME LOOP =====
 function gameLoop() {
-  if (!gamePaused) {  // <-- only update game if not paused
+  if (!gamePaused) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBubbles();
 
@@ -513,7 +503,6 @@ function gameLoop() {
 
 gameLoop();
 
-
 // ===== SERVICE WORKER =====
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("/sw.js")
@@ -522,9 +511,5 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 
-
-
-
-  
 </body>
 </html>
