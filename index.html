@@ -155,23 +155,98 @@
 
   <h2>Underwater Robotics Game</h2>
   <h3> If your on mobile click on the game to play, on computer just press space or click</h3>
-  <h3> press p to pause</h3>
+  <h3> press escape (or esc on the top left of the keyboard) to pause</h3>
   <div style="display: flex; justify-content: center; gap: 40px;">
     <canvas id="gameCanvas" width="400" height="600"></canvas>
   </div>
 <script>
 let gameState = "start";
+let gameSpeedMultiplier = 1;
 
+//====== PAUSE AND MENU SETTINGS ======//
 
-//====== PAUSE AND MENU ======//
 let gamePaused = false;
-let scoreMultiplier = 1;
+let scoreMultiplier = 1; // default 1x
 
 // Create pause menu div
-const pauseMenu = document.createElement ("div");
+const pauseMenu = document.createElement("div");
 pauseMenu.style.position = "fixed";
 pauseMenu.style.top = "0";
 pauseMenu.style.left = "0";
+pauseMenu.style.width = "100%";
+pauseMenu.style.height = "100%";
+pauseMenu.style.backgroundColor = "rgba(0,0,0,0.8)";
+pauseMenu.style.color = "white";
+pauseMenu.style.display = "none"; // hidden by default
+pauseMenu.style.flexDirection = "column";
+pauseMenu.style.alignItems = "center";
+pauseMenu.style.justifyContent = "center";
+pauseMenu.style.fontFamily = "sans-serif";
+pauseMenu.style.zIndex = "1000";
+pauseMenu.style.textAlign = "center";
+document.body.appendChild(pauseMenu);
+
+// Score display
+const pauseScore = document.createElement("h2");
+pauseMenu.appendChild(pauseScore);
+
+// Buttons
+const resumeBtn = document.createElement("button");
+resumeBtn.textContent = "Resume";
+resumeBtn.style.fontSize = "1.5em";
+resumeBtn.style.margin = "10px";
+pauseMenu.appendChild(resumeBtn);
+
+const settingsBtn = document.createElement("button");
+settingsBtn.textContent = "Settings";
+settingsBtn.style.fontSize = "1.5em";
+settingsBtn.style.margin = "10px";
+pauseMenu.appendChild(settingsBtn);
+
+// Settings panel
+const settingsPanel = document.createElement("div");
+settingsPanel.style.display = "none";
+settingsPanel.style.flexDirection = "column";
+settingsPanel.style.alignItems = "center";
+settingsPanel.style.marginTop = "20px";
+pauseMenu.appendChild(settingsPanel);
+
+// Speed options
+const speedLabel = document.createElement("h3");
+speedLabel.textContent = "Game Speed:";
+settingsPanel.appendChild(speedLabel);
+
+const speeds = [0.5, 1, 1.5];
+speeds.forEach(mult => {
+  const btn = document.createElement("button");
+  btn.textContent = mult + "x";
+  btn.style.margin = "5px";
+  btn.onclick = () => {
+    scoreMultiplier = mult;
+    gameSpeedMultiplier = mult;
+  };
+  settingsPanel.appendChild(btn);
+});
+
+function togglePause() {
+  gamePaused = !gamePaused;
+  pauseMenu.style.display = gamePaused ? "flex" : "none";
+  settingsPanel.style.display = "none"; // hide settings when pausing
+  pauseScore.textContent = "Score: " + Math.floor(score);
+}
+
+resumeBtn.onclick = () => togglePause();
+settingsBtn.onclick = () => {
+  settingsPanel.style.display = settingsPanel.style.display === "none" ? "flex" : "none";
+};
+
+// Pause on Escape key
+document.addEventListener("keydown", e => {
+  if (e.code === "Escape") {
+    togglePause();
+  }
+});
+
 
 
 // ===== OFFLINE STATUS =====
@@ -291,7 +366,7 @@ function drawObstacles() {
   obstacles.forEach(ob => {
     ctx.fillRect(ob.x, 0, obstacleWidth, ob.gapY);
     ctx.fillRect(ob.x, ob.gapY + obstacleGap, obstacleWidth, canvas.height - (ob.gapY + obstacleGap));
-    ob.x -= obstacleSpeed;
+    ob.x -= obstacleSpeed * gameSpeedMultiplier;
   });
 }
 
@@ -309,8 +384,8 @@ function drawRobot() {
 }
 
 function updateRobot() {
-  robotVelocity += gravity;
-  robotY += robotVelocity;
+  robotVelocity += gravity * gameSpeedMultiplier;
+  robotY += robotVelocity * gameSpeedMultiplier;
 }
 
 function checkCollision() {
@@ -326,7 +401,7 @@ function checkCollision() {
     }
     if (!ob.passed && ob.x + obstacleWidth < robotX) {
       ob.passed = true;
-      score++;
+      score += scoreMultiplier;
       if (score > highscore) {
         highscore = score;
         localStorage.setItem("highScore", highscore);
@@ -415,26 +490,29 @@ canvas.addEventListener("touchstart", e => {
 
 // ===== GAME LOOP =====
 function gameLoop() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawBubbles();
+  if (!gamePaused) {  // <-- only update game if not paused
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBubbles();
 
-  if (gameState === "playing") {
-    updateRobot();
-    if (frameCount % 120 === 0) createObstacle();
-    drawObstacles();
-    checkCollision();
-    obstacleSpeed = 2 + Math.floor(score / 5) * 0.5;
+    if (gameState === "playing") {
+      updateRobot();
+      if (frameCount % Math.floor(120 / gameSpeedMultiplier) === 0) createObstacle();
+      drawObstacles();
+      checkCollision();
+      obstacleSpeed = 2 + Math.floor(score / 5) * 0.5;
+    }
+
+    drawRobot();
+    if (explosions.length > 0) drawExplosions();
+    drawUI();
+
+    frameCount++;
   }
-
-  drawRobot();
-  if (explosions.length > 0) drawExplosions();
-  drawUI();
-
-  frameCount++;
   requestAnimationFrame(gameLoop);
 }
 
 gameLoop();
+
 
 // ===== SERVICE WORKER =====
 if ("serviceWorker" in navigator) {
