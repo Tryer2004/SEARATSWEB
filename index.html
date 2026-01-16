@@ -1,152 +1,183 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sea Rats Website</title>
-  <style> 
-    :root {
-      --bg-color: lightblue;
-      --text-color: black;
-      --heading-color: darkblue;
-      --navbar-bg: darkblue;
-      --navbar-link: lightblue;
-      --navbar-hover: black;
-    }
-    [data-theme="dark"] {
-      --bg-color: #121212;
-      --text-color: #f0f0f0;
-      --heading-color: #bb86fc;
-      --navbar-bg: #222;
-      --navbar-link: #80c0ff;
-      --navbar-hover: #333;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sea Rats</title>
 
-    h1 {
-      text-align: center;
-      color: var(--heading-color);
-      font-family: 'Times New Roman', Times, serif;
-      font-size: 5em;
-      margin-bottom: 1em;
-      margin-top: 0em;
-    }
-    h2 {
-      color: darkred;
-      font-family: 'Times New Roman', Times, serif;
-      font-size: 2em;
-      margin-bottom: 0.5em;
-      margin-top: 0.5em;
-    }
-    h3 {
-      color: darkgreen;
-      font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-      font-size: 1.5em;
-      margin-bottom: 0.5em;
-      margin-top: 0.5em;
-    }
-    img {
-      width: 20%;
-      height: 20%;
-    }
-    p {
-      font-family:'Times New Roman', Times, serif;
-      font-size:1.2em;
-      color: var(--text-color);
-    }
-    .navbar ul{
-      list-style-type: none;
-      background-color: var(--navbar-bg);
-      padding:0px;
-      margin:0px;
-      overflow:hidden;
-    }
-    .navbar a{
-      color:var(--navbar-link);
-      text-decoration: none;
-      padding:15px;
-      display:block;
-      text-align: center;
-    }
-    .navbar a:hover{
-      background-color:var(--navbar-hover);
-    }
-    .navbar li{
-      float:left;
-    }
-    main{
-      margin-left: 20px;
-      margin-right:20px;
-    }
+<style>
+/* ================= DESIGN SYSTEM ================= */
+:root {
+  --primary: #3b82f6;
+  --bg: #ffffff;
+  --card: #f9fafb;
+  --text: #111827;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+}
 
-    [data-theme="dark"] {
-      --bg:#0f172a;
-      --text:#e5e7eb;
-      --card:#1e293b;
-    }
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-    } 
-    .card {
-      background-color: var(--card);
-    }
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --card: #1f2937;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --border: #374151;
+}
 
-    #gameCanvas {
-      display: block;
-      margin: 20px auto;
-      background-color: #0b3c5d;
-      border: 2px solid #0ff;
-    } 
-  </style>
+/* ================= BASE ================= */
+body {
+  margin: 0;
+  font-family: Inter, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+h1,h2,h3 {
+  letter-spacing: -0.02em;
+}
+
+p {
+  max-width: 700px;
+  line-height: 1.7;
+  color: var(--muted);
+  
+}
+
+/* ================= NAVBAR ================= */
+.navbar {
+  background: rgba(15,23,42,0.9);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(10px);
+  z-index: 10;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 24px;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: var(--muted);
+}
+
+.navbar a:hover {
+  color: var(--primary);
+}
+
+/* ================= HERO ================= */
+.hero {
+  text-align: center;
+  padding: 120px 24px 80px;
+}
+
+.hero h1 {
+  letter-spacing: -0.03;
+ background: linear-gradient(90deg, #60a5fa, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+
+
+  font-size: 4.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.hero p {
+  font-size: 1.35rem;
+  max-width: 600px;
+  margin: 0 auto;
+  color: var(--muted);
+}
+
+/* ================= SECTIONS / CARDS ================= */
+section {
+  max-width: 900px;
+  margin: 80px auto;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+}
+
+/* ================= GAME ================= */
+#gameCanvas {
+  display: block;
+  margin: 32px auto;
+  background: #0b3c5d;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+}
+</style>
 </head>
 
 <body>
 
- <h1>The Sea Rats Website!</h1>
-  <nav class="navbar">
-    <button id="theme-toggle">🌙 Dark Mode</button>
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar">
+  <div class="nav-container">
+    <strong>Sea Rats</strong>
+    <button id="theme-toggle">🌙</button>
     <ul>
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
-      <li><a href="Donate.html">Donate</a></li>
+      <li><a href="donate.html">Donate</a></li>
     </ul>
-  </nav>
-  <main>
-    <h3>This is the home page of the Sea Rats Website.</h3>
-  </main>
+  </div>
+</nav>
 
-  <h2>This is a site coded by one of our engineers!</h2>
-  <p>This site will describe what and how the Sea Rats work! (this site is in beta and will have frequent updates)</p>
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <h1>Sea Rats</h1>
+  <p>Building underwater robotics to monitor and protect our oceans.</p>
+</header>
 
-  <p>The Sea Rats are a company created back in 2024. They were founded to compete in the SeaMate ROV competition. In the annual competition, they won all awards at the Scout level and now compete in the Ranger level. Our theme in the 2025 season for SeaMate was Monitoring and Mitigating the ocean. Let's analyze this text: Monitoring means to look and check, and mitigating means to stop. This means this year's theme is about watching and putting an end to climate change. This website was created as a personal try at coding, and if you want to try coding and want to create your own website, my advice is to not give up and keep going. During the SeaMate competition we only scored a total of 115 points throughout 2 tries, but we got the most points from the presentation and our Marketing Display (which we worked on the most), which made us win the competition. During the competition we were missing our colleague Cody Simpson and we were behind schedule, but we were able to do so much work by 1. staying afterschool to work on it and 2. putting lots of effort every day for 1 week.</p>
+<!-- ================= ABOUT ================= -->
+<section class="card">
+  <h2>About Sea Rats</h2>
+  <p>
+    Founded in 2024, Sea Rats competes in the SeaMate ROV competition.
+    After winning all Scout-level awards, the team now competes at the
+    Ranger level, focusing on ocean monitoring and climate mitigation.
+  </p>
+</section>
 
-  <h2>Check out the SeaMate website!</h2>
-  <ul>
-    <li><a href="https://seamate.org/">Seamate</a></li>
-  </ul>
+<!-- ================= GAME ================= -->
+<section class="card">
+  <h2>Underwater Robotics Simulator</h2>
+  <p>
+    Test your piloting skills in a simplified ROV navigation challenge.
+    Tap, click, or press space to control the robot.
+  </p>
 
-  <h2>The list of objects in our robot (as of Jan, 2026):</h2>
-  <ul>
-    Currently in progress
-  </ul>
-
-  <h2>The list of our 5 members! (as of Jan, 2026):</h2>
-  <ol>
-    <li>AG (CEO and Coder)</li>
-    <li>CF</li>
-    <li>MS</li>
-    <li>E</li>
-    <li>MS</li>
-  </ol>
-
-<h2>Underwater Robotics Game</h2>
-<h3>If you're on mobile click on the game to play, on computer just press space or click</h3>
-<h3>Press escape (or ESC) to pause</h3>
-<div style="display: flex; justify-content: center; gap: 40px;">
   <canvas id="gameCanvas" width="400" height="600"></canvas>
-</div>
+</section>
 
-<script>
+
+
+
+
+     <script> 
+
+
 let gameState = "start";
 let gameSpeedMultiplier = 1;
 let gamePaused = false;
