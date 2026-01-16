@@ -96,13 +96,39 @@ p {
   font-size: 4.5rem;
   font-weight: 700;
   margin-bottom: 16px;
+  /* Animation */
+
+  opacity: 0;
+  transform: translateY(20px);
+  animation: heroFadeUp 4s ease-out forwards;
+  animation-delay: 0.27s;
 }
+
+
+
+
 
 .hero p {
   font-size: 1.35rem;
   max-width: 600px;
   margin: 0 auto;
   color: var(--muted);
+
+  /* Animation */
+  opacity: 0;
+  transform: translateY(20px);
+  animation: heroFadeUp 34s ease-out forwards;
+  animation-delay: 0.30s;
+}
+
+/* Keyframes */
+
+@keyframes heroFadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+
+  }
 }
 
 /* ================= SECTIONS / CARDS ================= */
