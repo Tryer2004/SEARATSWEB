@@ -1,131 +1,152 @@
 <!DOCTYPE html>
-<html lang="en"data-theme="dark">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name = "description" content=" Sea Rats won the 2025 Florida Regional SeaMate compeition in Saint Peteresburg, all about the team.">
-    <meta name="keywords" content = "Sea Rats, Winners, SeaMate, 2025, Florida Regional,ROV,Underwater Robotics, Miami Country Day,Saint Peteresburg,Scout class">
-    <title>Sea Rats - 2025 Florida Regional SeaMate Scout Winners </title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About – Sea Rats</title>
+
+<style>
+:root {
+  --primary: #3b82f6;
+  --bg: #ffffff;
+  --card: #f9fafb;
+  --text: #111827;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+}
+
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --card: #1f2937;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --border: #374151;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+h1,h2,h3 {
+  letter-spacing: -0.02em;
+}
+
+p {
+  max-width: 700px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.navbar {
+  background: rgba(15,23,42,0.9);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(10px);
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 24px;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: var(--muted);
+}
+
+.navbar a:hover {
+  color: var(--primary);
+}
+
+section {
+  max-width: 900px;
+  margin: 80px auto;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+}
+</style>
 </head>
- 
-  <style> 
-    
-    h1 {
-          text-align: center;
-          color: darkblue;
-          font-family: 'Times New Roman', Times, serif;
-          font-size: 5em;
-          margin-bottom: 1em;
-          margin-top: 0em;
-        }
-        h2 {
-          color: darkred;
-          font-family: 'Times New Roman', Times, serif;
-          font-size: 2em;
-          margin-bottom: 0.5em;
-          margin-top: 0.5em;
-        }
-        h3 {
-          color: darkgreen;
-          font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-          font-size: 1.5em;
-          margin-bottom: 0.5em;
-          margin-top: 0.5em;
-        }
-        img {
-          width: 10%;
-          height:10
-        }
-      
-         p {
-          font-family:'Times New Roman', Times, serif;
-              font-size:1.2em;
-            color:black; } 
-            .navbar ul{
-             list-style-type: none;
-             background-color: darkblue;
-             padding:0px;
-             margin:0px;
-             overflow:hidden;
-            }
-            .navbar a{
-              color:lightblue;
-              text-decoration: none;
-              padding:15px;
-              display:block;
-              text-align: center;
 
-            }
-            .navbar a:hover{
-              background-color:black;
+<body>
 
+<nav class="navbar">
+  <div class="nav-container">
+    <strong>Sea Rats</strong>
+    <button id="theme-toggle">🌙</button>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="donate.html">Donate</a></li>
+    </ul>
+  </div>
+</nav>
 
+<section class="card">
+  <h1>About Sea Rats</h1>
+  <p>
+    Sea Rats is an underwater robotics team founded in 2024 at
+    Miami Country Day School as part of the Underwater Robotics program.
+  </p>
+</section>
 
-            }
-            .navbar li{
-              float:left;
+<section class="card">
+  <h2>Our Mission</h2>
+  <p>
+    Our mission is to design, build, and operate underwater robots
+    that support ocean monitoring and environmental protection while
+    developing real-world engineering skills.
+  </p>
+</section>
 
-            }
-            main{
-              margin-left: 20px;
-              margin-right:20px;
-            }
-            img{
-              width: 15%;
-              height:15%;
-            }
-             /* Dark mode */
-            [data-theme="dark"] {
-    --bg:#0f172a;
-    --text:#e5e7eb;
-    --card:1e293b;
-    
-     
-   } body {
-    background-color: var(--bg);
-    color: var(--text);
-   } 
-   .card {
-    background-color: var(--card);
-   } 
-        </style>
-        <body>
-    <h1>About Us</h1>
-    <nav class="navbar">
-       <button id="theme-toggle">🌙 Dark Mode</button>
+<section class="card">
+  <h2>SeaMate Competition</h2>
+  <p>
+    In the 2025 Florida Regional SeaMate competition in Saint Petersburg,
+    Sea Rats won all Scout-level awards. The team now competes at the
+    Ranger level with a focus on monitoring and mitigating ocean damage.
+  </p>
+</section>
 
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="Donate.html">Donate</a></li>
-        </ul>
-      </nav>
-      <h2> This is about the ROV and more that won the SEA RATS the SeaMate compeitition in 2025 in Saint Petersburg</h2>
-      <p>The Sea Rats originated in our school Miami Country Day in the Underwater Robotics program.
-        Our ROV called the Sea Scavenger was designed to be easily manuervered with our control box.
-        We also had a backup ROV incase we had any electrical problems we faced.Our sea scavengers shape is a square.
-        We chose this shape because it is easy to control and compatible with our skill level.We came up with this design by holding a competition in the beginning oof 6th grade.
-        Our Bouyancy is an importent part of our ROV too, We used closed cell foam in the shape of pool noodles for this.Our claw is the next part of our ROV, our claw was originally created 
-        by one of our collegues who competed in the the SeaMate competition in early 2024 and he and his collegue got 2end place. We made this claw better by making the circuler piece of the claw
-         smaller and a 2end part of the claw with a flatter shape with ridges to grab any flat shapes quickly and efficiently.
-         For me the Sea Rats will always be an importent part of my life because of the 
-         effort we all put into The Sea Rats.</p>
-      <img src="motorcover.jpeg"> </img> 
-      <h2> This is our motor cover</h2>
-      <p>Motor covers are used to protect the motors from gettng entangled in cords and other objects</p>
-      <img src="ROV.jpeg"> </img>
-      <p>This is our Rov called the Sea Scavenger!, it won us the compeition in 2025, we will not be using it this year as we need a better ROV for Ranger class</p>
+<section class="card">
+  <h2>Our ROV</h2>
+  <p>
+    Our robot, the <strong>Sea Scavenger</strong>, was designed for
+    stability, maneuverability, and reliability. It uses closed-cell
+    foam for buoyancy and a custom claw optimized for efficient object
+    retrieval during missions.
+  </p>
+</section>
 
-       <script>
-    const toggle = document.getElementById("theme-toggle");
-    toggle.addEventListener("click", () => {
-    const htmlEl = document.documentElement; // <html> element
-    const current = htmlEl.getAttribute("data-theme");// get current theme
-   const newTheme = current === "dark" ? "light" : "dark"; // switch 
-    
-   htmlEl.setAttribute("data-theme",newTheme); //apply the new theme
-  });
+<script>
+document.getElementById("theme-toggle").onclick = () => {
+  const html = document.documentElement;
+  html.setAttribute(
+    "data-theme",
+    html.getAttribute("data-theme") === "dark" ? "light" : "dark"
+  );
+};
+</script>
 
-  </script>
 </body>
 </html>
