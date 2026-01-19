@@ -80,10 +80,40 @@ section {
 }
 
 .card {
-  background: var(--card);
-  border: 1px solid var(--border);
+  background: rgba(30, 41, 59, 0.75);
   border-radius: 16px;
   padding: 32px;
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* ===== SCROLL ANIMATION ===== */
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease-out;
+}
+
+.scroll-animate.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.btn-primary {
+  display: inline-block;
+  padding: 14px 28px;
+  border-radius: 999px;
+  background: #000000;
+  color: #ffffff;
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  background: #f3f4f6;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
 }
 </style>
 </head>
@@ -95,50 +125,97 @@ section {
     <strong>Sea Rats</strong>
     <button id="theme-toggle">🌙</button>
     <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="donate.html">Donate</a></li>
+      <li><a href="index.html" class="btn-primary">Home</a></li>
+      <li><a href="about.html" class="btn-primary">About</a></li>
+      <li><a href="donate.html" class="btn-primary">Donate</a></li>
     </ul>
   </div>
 </nav>
 
-<section class="card">
+<section class="card scroll-animate">
   <h1>About Sea Rats</h1>
   <p>
-    Sea Rats is an underwater robotics team founded in 2024 at
-    Miami Country Day School as part of the Underwater Robotics program.
+    Sea Rats is an underwater robotics team founded in 2024 at Miami Country Day School as part of the Underwater Robotics program. The team brings together students with a shared passion for engineering, technology, and marine science.
+  </p>
+  <p>
+    Through hands-on design, testing, and real-world problem solving, Sea Rats develops technical skills, teamwork, and innovation while addressing challenges related to ocean exploration and environmental conservation.
   </p>
 </section>
 
-<section class="card">
+<section class="card scroll-animate">
   <h2>Our Mission</h2>
   <p>
-    Our mission is to design, build, and operate underwater robots
-    that support ocean monitoring and environmental protection while
-    developing real-world engineering skills.
+    Our mission is to design, build, and operate underwater robots that support ocean monitoring and environmental protection while developing real-world engineering skills.
+  </p>
+  <p>
+    By integrating mechanical design, electronics, and programming, we aim to create reliable robotic systems capable of performing complex tasks in underwater environments. We emphasize continuous learning, iteration, and collaboration.
   </p>
 </section>
 
-<section class="card">
+<section class="card scroll-animate">
   <h2>SeaMate Competition</h2>
   <p>
-    In the 2025 Florida Regional SeaMate competition in Saint Petersburg,
-    Sea Rats won all Scout-level awards. The team now competes at the
-    Ranger level with a focus on monitoring and mitigating ocean damage.
+    In the 2025 Florida Regional SeaMate competition held in Saint Petersburg, Sea Rats earned all Scout-level awards, demonstrating strong performance across engineering, mission execution, and teamwork.
+  </p>
+  <p>
+   After the compeition the two original team members split up, the Sea Rats have 3 new members which means the Sea Rats will compete in Scout again this year to build our team through expirence and bond.
+</section>
+
+<section class="card scroll-animate">
+  <h2>Our ROV</h2>
+  <p>
+    Our robot, the <strong>Sea Scavenger</strong>, was designed with an emphasis on stability, maneuverability, and reliability in demanding underwater conditions.
+  </p>
+  <p>
+    The ROV utilizes closed-cell foam for buoyancy and features a balanced frame that allows for smooth and controlled movement. Its modular design enables easy maintenance and future upgrades as mission requirements evolve.
   </p>
 </section>
 
-<section class="card">
-  <h2>Our ROV</h2>
+<section class="card scroll-animate">
+  <h2>Our Claw</h2>
   <p>
-    Our robot, the <strong>Sea Scavenger</strong>, was designed for
-    stability, maneuverability, and reliability. It uses closed-cell
-    foam for buoyancy and a custom claw optimized for efficient object
-    retrieval during missions.
+    Our claw, now named <strong>Mouse Trap</strong>, was originally developed alongside our ROV, Sea Scavenger. The name reflects its fast, precise gripping mechanism and compact form.
+  </p>
+  <p>
+    Mouse Trap is designed to efficiently grab both circular and flat objects during mission tasks. Although it was created just one week prior to the competition, it performed reliably under competition conditions.
+  </p>
+  <p>
+    The design was inspired by another underwater robotics enthusiast, with custom adjustments made to improve performance and durability. As the team competes at higher levels, the claw will continue to be refined to meet more advanced mission requirements.
   </p>
 </section>
 
 <script>
+
+  // ===== SERVICE WORKER =====
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js")
+    .then(() => console.log("Service Worker Registered"))
+    .catch(err => console.log("SW failed to register", err));
+}
+// ===== SCROLL ANIMATION =====
+const scrollElements = document.querySelectorAll('.scroll-animate');
+
+const elementInView = (el, dividend = 1) => {
+  const elementTop = el.getBoundingClientRect().top;
+  return elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend;
+};
+
+const displayScrollElement = (el) => {
+  el.classList.add('visible');
+};
+
+const handleScrollAnimation = () => {
+  scrollElements.forEach((el) => {
+    if (elementInView(el, 1.25)) {
+      displayScrollElement(el);
+    }
+  });
+};
+
+window.addEventListener('scroll', handleScrollAnimation);
+handleScrollAnimation();
+
+// ===== DARK MODE TOGGLE =====
 document.getElementById("theme-toggle").onclick = () => {
   const html = document.documentElement;
   html.setAttribute(
