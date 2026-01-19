@@ -76,8 +76,9 @@ section {
 }
 
 .card {
-  background: var(--card);
-  border: 1px solid var(--border);
+  background: rgba(30, 41, 59, 0.75);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.06);
   border-radius: 16px;
   padding: 32px;
 }
@@ -85,6 +86,51 @@ section {
 ul {
   padding-left: 20px;
 }
+
+/* ===== SCROLL ANIMATION ===== */
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease-out;
+}
+
+.scroll-animate.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.scroll-animate:nth-child(1) { transition-delay: 0s; }
+.scroll-animate:nth-child(2) { transition-delay: 0.2s; }
+.scroll-animate:nth-child(3) { transition-delay: 0.4s; }
+
+/* button that feels clean (link to other pages) */
+.btn-primary {
+  display: inline-block;
+  padding: 14px 28px;
+  border-radius: 999px;
+  background: #000000;          
+  color: #ffffff;              
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  background: #f3f4f6;          /* subtle hover */
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+.card {
+ 
+  
+background: rgba(30, 41, 59, 0.75);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 32px;
+}
+
+
 </style>
 </head>
 
@@ -95,14 +141,14 @@ ul {
     <strong>Sea Rats</strong>
     <button id="theme-toggle">🌙</button>
     <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="donate.html">Donate</a></li>
+      <li><a href="index.html" class="btn-primary">Home</a></li>
+      <li><a href="about.html" class="btn-primary">About</a></li>
+      <li><a href="donate.html" class="btn-primary">Donate</a></li>
     </ul>
   </div>
 </nav>
 
-<section class="card">
+<section class="card scroll-animate">
   <h1>Donate</h1>
   <p>
     While Sea Rats is not currently accepting donations,
@@ -111,7 +157,7 @@ ul {
   </p>
 </section>
 
-<section class="card">
+<section class="card scroll-animate">
   <h2>Recommended Organizations</h2>
   <ul>
     <li><a href="https://www.stjude.org/donate/">St. Jude Children’s Research Hospital</a></li>
@@ -126,6 +172,38 @@ ul {
 </section>
 
 <script>
+
+  
+// ===== SCROLL ANIMATION =====
+const scrollElements = document.querySelectorAll('.scroll-animate');
+
+const elementInView = (el, dividend = 1) => {
+  const elementTop = el.getBoundingClientRect().top;
+  return elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend;
+};
+
+const displayScrollElement = (el) => {
+  el.classList.add('visible');
+};
+
+const hideScrollElement = (el) => {
+  el.classList.remove('visible');
+};
+
+const handleScrollAnimation = () => {
+  scrollElements.forEach((el) => {
+    if (elementInView(el, 1.25)) {
+      displayScrollElement(el);
+    } 
+  });
+};
+
+window.addEventListener('scroll', handleScrollAnimation);
+
+// Run on page load
+handleScrollAnimation();
+
+
 document.getElementById("theme-toggle").onclick = () => {
   const html = document.documentElement;
   html.setAttribute(
@@ -133,6 +211,13 @@ document.getElementById("theme-toggle").onclick = () => {
     html.getAttribute("data-theme") === "dark" ? "light" : "dark"
   );
 };
+
+ // ===== SERVICE WORKER =====
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js")
+    .then(() => console.log("Service Worker Registered"))
+    .catch(err => console.log("SW failed to register", err));
+}
 </script>
 
 </body>
