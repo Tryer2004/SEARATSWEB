@@ -131,6 +131,24 @@ p {
   }
 }
 
+.btn-primary {
+  display: inline-block;
+  padding: 14px 28px;
+  border-radius: 999px;
+  background: #000000;          
+  color: #ffffff;              
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  background: #f3f4f6;          /* subtle hover */
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+
 /* ================= SECTIONS / CARDS ================= */
 section {
   max-width: 900px;
@@ -138,8 +156,11 @@ section {
 }
 
 .card {
-  background: var(--card);
-  border: 1px solid var(--border);
+ 
+  
+background: rgba(30, 41, 59, 0.75);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.06);
   border-radius: 16px;
   padding: 32px;
 }
@@ -148,10 +169,30 @@ section {
 #gameCanvas {
   display: block;
   margin: 32px auto;
-  background: #0b3c5d;
-  border-radius: 12px;
-  border: 2px solid var(--border);
+  background: radial-gradient(circle at top, #0ea5e9, #020617 70%);
+  border-radius: 14px;
+  border: 2px solid rgba(255,255,0.15);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6)
 }
+
+
+/* Scroll Animation */
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease-out
+
+}
+
+.scroll-animate.visible{
+  opacity: 1;
+  transform: translateY(0);
+}
+.scroll-animate:nth-child(1) { transition-delay: 0s; }
+.scroll-animate:nth-child(2) { transition-delay: 0.2s; }
+.scroll-animate:nth-child(3) { transition-delay: 0.4s; }
+
+
 </style>
 </head>
 
@@ -163,9 +204,9 @@ section {
     <strong>Sea Rats</strong>
     <button id="theme-toggle">🌙</button>
     <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="Donate.html">Donate</a></li>
+      <li><a href="index.html" class="btn-primary">Home</a></li>
+      <li><a href="about.html" class="btn-primary">About</a></li>
+      <li><a href="donate.html" class="btn-primary">Donate</a></li>
     </ul>
   </div>
 </nav>
@@ -177,12 +218,13 @@ section {
 </header>
 
 <!-- ================= ABOUT ================= -->
-<section class="card">
+<section class="card scroll-animate">
   <h2>About Sea Rats</h2>
   <p>
     Founded in 2024, Sea Rats competes in the SeaMate ROV competition.
-    After winning all Scout-level awards, the team now competes at the
-    Ranger level, focusing on ocean monitoring and climate mitigation.
+    After winning all Scout-level awards, the team is  competes at the
+  Scout level, focusing on ocean monitoring and climate mitigation. We are still in 
+  the Scout level because we need to devolop our team more.
   </p>
 </section>
 
@@ -198,16 +240,12 @@ section {
 </section>
 
 
-
-
-
-     <script> 
-
-
+<script>
 let gameState = "start";
 let gameSpeedMultiplier = 1;
 let gamePaused = false;
 let scoreMultiplier = 1;
+let gameTheme = localStorage.getItem("gameTheme") || "original";
 
 // ===== PAUSE MENU =====
 const pauseMenu = document.createElement("div");
@@ -241,6 +279,18 @@ settingsBtn.textContent = "Settings";
 settingsBtn.style.fontSize = "1.5em";
 settingsBtn.style.margin = "10px";
 pauseMenu.appendChild(settingsBtn);
+
+// Shop Button
+const shopBtn = document.createElement("button");
+shopBtn.textContent = "Shop";
+shopBtn.style.fontSize = "1.5em";
+shopBtn.style.margin = "10px";
+pauseMenu.appendChild(shopBtn);
+
+shopBtn.onclick = () => {
+  pauseMenu.style.display = "none";
+  shopMenu.style.display = "flex";
+}
 
 const settingsPanel = document.createElement("div");
 settingsPanel.style.display = "none";
@@ -287,7 +337,7 @@ document.addEventListener("keydown", e => {
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-// ===== MOBILE PAUSE BUTTON (FIXED) =====
+// ===== MOBILE PAUSE BUTTON =====
 const pauseButton = document.createElement("button");
 pauseButton.textContent = "⏸";
 pauseButton.style.position = "absolute";
@@ -307,10 +357,58 @@ function updatePauseButtonPosition() {
 }
 
 pauseButton.addEventListener("click", togglePause);
-
 window.addEventListener("resize", updatePauseButtonPosition);
 window.addEventListener("scroll", updatePauseButtonPosition);
 updatePauseButtonPosition();
+
+// ===== SHOP MENU =====
+const shopMenu = document.createElement("div");
+shopMenu.style.position = "fixed";
+shopMenu.style.top = "0";
+shopMenu.style.left = "0";
+shopMenu.style.width = "100%";
+shopMenu.style.height = "100%";
+shopMenu.style.background = "rgba(0,0,0,0.85)";
+shopMenu.style.display = "none";
+shopMenu.style.flexDirection = "column";
+shopMenu.style.alignItems = "center";
+shopMenu.style.justifyContent = "center";
+shopMenu.style.color = "white";
+shopMenu.style.zIndex = "1000";
+shopMenu.style.fontFamily = "system-ui";
+document.body.appendChild(shopMenu);
+
+const shopTitle = document.createElement("h1");
+shopTitle.textContent = "GAME THEMES";
+shopMenu.appendChild(shopTitle);
+
+const originalBtn = document.createElement("button");
+originalBtn.textContent = "🎮 Original";
+shopMenu.appendChild(originalBtn);
+
+const retroBtn = document.createElement("button");
+retroBtn.textContent = "🕹 Retro";
+shopMenu.appendChild(retroBtn);
+
+[originalBtn, retroBtn].forEach(btn => {
+  btn.style.fontSize = "1.5em";
+  btn.style.margin = "10px";
+  btn.style.padding = "10px 20px";
+});
+
+originalBtn.onclick = () => {
+  gameTheme = "original"; 
+  localStorage.setItem("gameTheme", gameTheme);
+  applyGameTheme();
+  shopMenu.style.display = "none";
+};
+
+retroBtn.onclick = () => {
+  gameTheme = "retro";
+  localStorage.setItem("gameTheme", gameTheme);
+  applyGameTheme();
+  shopMenu.style.display = "none";
+};
 
 // ===== OFFLINE STATUS =====
 const offlineStatus = document.createElement("div");
@@ -337,18 +435,16 @@ toggle.addEventListener("click", () => {
   htmlEl.setAttribute("data-theme", current === "dark" ? "light" : "dark");
 });
 
-// ===== GAME STATE =====
+// ===== GAME VARIABLES =====
 let robotY = 300;
 let robotVelocity = 0;
 const robotSize = 25;
 const robotWidth = 40;
 const gravity = 0.5;
 const thrust = -8;
-
 let frameCount = 0;
 let score = 0;
 let highscore = parseInt(localStorage.getItem("highScore")) || 0;
-
 const obstacles = [];
 const obstacleWidth = 50;
 const obstacleGap = 160;
@@ -395,6 +491,18 @@ function drawExplosions() {
   });
 }
 
+function applyGameTheme() {
+  if (gameTheme === "retro") {
+    canvas.style.imageRendering = "pixelated";
+    ctx.imageSmoothingEnabled = false;
+  } else {
+    canvas.style.imageRendering = "auto";
+    ctx.imageSmoothingEnabled = true;
+  }
+}
+applyGameTheme();
+
+// ===== BUBBLES =====
 function drawBubbles() {
   ctx.fillStyle = "rgba(255,255,255,0.35)";
   bubbles.forEach(bubble => {
@@ -409,6 +517,7 @@ function drawBubbles() {
   });
 }
 
+// ===== OBSTACLES =====
 function createObstacle() {
   const maxChange = 100;
   let gapY = lastGapY + (Math.random() * 2 - 1) * maxChange;
@@ -418,32 +527,81 @@ function createObstacle() {
 }
 
 function drawObstacles() {
-  ctx.fillStyle = "#065f46";
   obstacles.forEach(ob => {
+
+    if (gameTheme === "retro") {
+      ctx.fillStyle = "#22c55e";
+      ctx.fillRect(ob.x, 0, obstacleWidth, ob.gapY);
+      ctx.fillRect(ob.x, ob.gapY + obstacleGap, obstacleWidth, canvas.height - (ob.gapY + obstacleGap));
+      ob.x -= obstacleSpeed * gameSpeedMultiplier;
+      return;
+    }
+
+    const pipeGradient = ctx.createLinearGradient(ob.x, 0, ob.x + obstacleWidth, 0);
+    pipeGradient.addColorStop(0, "#064e3b");
+    pipeGradient.addColorStop(0.5, "#10b981");
+    pipeGradient.addColorStop(1, "#064e3b");
+    ctx.fillStyle = pipeGradient;
+
     ctx.fillRect(ob.x, 0, obstacleWidth, ob.gapY);
     ctx.fillRect(ob.x, ob.gapY + obstacleGap, obstacleWidth, canvas.height - (ob.gapY + obstacleGap));
+
+    ctx.fillStyle = "rgba(0,0,0,0.2)";
+    for (let i = 0; i < 4; i++) ctx.fillRect(ob.x + i * 12, 0, 2, canvas.height);
+
     ob.x -= obstacleSpeed * gameSpeedMultiplier;
   });
 }
 
+// ===== ROBOT =====
 function drawRobot() {
-  if (gameState !== "exploding"){
+  const x = 170;
+  const y = robotY;
+
+  if (gameTheme === "retro") {
     ctx.fillStyle = "#facc15";
-    ctx.fillRect(170, robotY, robotWidth, robotSize);
-    ctx.fillStyle = "#38bdf8";
-    ctx.fillRect(180, robotY + 5, 10, 10);
-    ctx.fillStyle = "rgba(255,255,255,0.6)";
-    ctx.beginPath();
-    ctx.arc(165, robotY + 12, 4, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.fillRect(x, y, 32, 24);
+    return;
   }
+
+  if (gameState === "exploding") return;
+
+  ctx.fillStyle = "#1e293b";
+  ctx.beginPath();
+  ctx.roundRect(x, y, 46, 28, 10);
+  ctx.fill();
+
+  ctx.fillStyle = "rgba(56,189,248,0.85)";
+  ctx.beginPath();
+  ctx.arc(x + 32, y + 14, 8, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = "#020617";
+  ctx.beginPath();
+  ctx.arc(x - 6, y + 6, 5, 0, Math.PI * 2);
+  ctx.arc(x - 6, y + 22, 5, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = "rgba(255,255,255,0.6)";
+  ctx.beginPath();
+  ctx.arc(x - 12, y + 6, 2, 0, Math.PI * 2);
+  ctx.arc(x - 12, y + 22, 2, 0, Math.PI * 2);
+  ctx.fill();
+
+  const glow = ctx.createRadialGradient(x + 50, y + 14, 2, x + 50, y + 14, 20);
+  glow.addColorStop(0, "rgba(56,189,248,0.6)");
+  glow.addColorStop(1, "rgba(56,189,248,0)");
+  ctx.fillStyle = glow;
+  ctx.fillRect(x + 35, y - 10, 40, 50);
 }
 
+// ===== UPDATE ROBOT =====
 function updateRobot() {
   robotVelocity += gravity * gameSpeedMultiplier;
   robotY += robotVelocity * gameSpeedMultiplier;
 }
 
+// ===== COLLISION & SCORE =====
 function checkCollision() {
   const robotX = 170;
   obstacles.forEach(ob => {
@@ -473,9 +631,11 @@ function checkCollision() {
   }
 }
 
+// ===== UI =====
 function drawUI() {
   ctx.fillStyle = "white";
-  ctx.font = "20px sans-serif";
+  ctx.font = "bold 20px system-ui";
+
   ctx.fillText("Score: " + Math.floor(score), 20, 30);
   ctx.fillText("Highscore: " + highscore, 20, 60);
 
@@ -483,20 +643,18 @@ function drawUI() {
   if (gameState === "start") {
     ctx.fillStyle = "rgba(0,0,0,0.6)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
     ctx.fillStyle = "white";
-    ctx.font = "28px sans-serif";
+    ctx.font = "bold 30px system-ui";
     ctx.fillText("UNDERWATER ROV", canvas.width / 2, 260);
-    ctx.font = "18px sans-serif";
+    ctx.font = "bold 20px system-ui";
     ctx.fillText("Tap or Press Space to Start", canvas.width / 2, 310);
   }
 
   if (gameState === "gameover") {
     ctx.fillStyle = "rgba(0,0,0,0.6)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
     ctx.fillStyle = "white";
-    ctx.font = "28px sans-serif";
+    ctx.font = "bold 20px system-ui";
     ctx.fillText("GAME OVER", canvas.width / 2, 260);
     ctx.font = "18px sans-serif";
     ctx.fillText("Tap or Press Space to Restart", canvas.width / 2, 310);
@@ -504,6 +662,7 @@ function drawUI() {
   ctx.textAlign = "left";
 }
 
+// ===== RESET GAME =====
 function resetGame() {
   robotY = 300;
   robotVelocity = 0;
@@ -553,11 +712,13 @@ function gameLoop() {
     if (explosions.length > 0) drawExplosions();
     drawUI();
 
+    // if exploding ends
+    if (gameState === "exploding" && explosions.length === 0) gameState = "gameover";
+
     frameCount++;
   }
   requestAnimationFrame(gameLoop);
 }
-
 gameLoop();
 
 // ===== SERVICE WORKER =====
@@ -566,7 +727,25 @@ if ("serviceWorker" in navigator) {
     .then(() => console.log("Service Worker Registered"))
     .catch(err => console.log("SW failed to register", err));
 }
+
+// ===== SCROLL ANIMATION =====
+const scrollElements = document.querySelectorAll('.scroll-animate');
+const elementInView = (el, dividend = 1) => {
+  const elementTop = el.getBoundingClientRect().top;
+  return elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend;
+};
+const displayScrollElement = (el) => el.classList.add('visible');
+const handleScrollAnimation = () => {
+  scrollElements.forEach(el => {
+    if (elementInView(el, 1.25)) displayScrollElement(el);
+  });
+};
+window.addEventListener('scroll', handleScrollAnimation);
+handleScrollAnimation();
 </script>
+
+     
+
 
 </body>
 </html>
