@@ -233,7 +233,7 @@ background: rgba(30, 41, 59, 0.75);
   <h2>Underwater Robotics Simulator</h2>
   <p>
     Test your piloting skills in a simplified ROV navigation challenge.
-    Tap, click, or press space to control the robot.
+    Tap, click, or press space to control the robot, press ESC or Escape on Mac to pause game.
   </p>
 
   <canvas id="gameCanvas" width="400" height="600"></canvas>
@@ -241,11 +241,20 @@ background: rgba(30, 41, 59, 0.75);
 
 
 <script>
+
 let gameState = "start";
 let gameSpeedMultiplier = 1;
 let gamePaused = false;
 let scoreMultiplier = 1;
 let gameTheme = localStorage.getItem("gameTheme") || "original";
+// ===== CURRENCY =====
+let currency = parseInt(localStorage.getItem("currency")) || 0;
+
+// ===== TOTAL SCORE =====
+let totalScore = parseInt(localStorage.getItem("totalScore")) || 0;
+
+// ===== PURCHASED THEMES =====
+let purchasedThemes = JSON.parse(localStorage.getItem("purchasedThemes")) || ["original"];
 
 // ===== PAUSE MENU =====
 const pauseMenu = document.createElement("div");
@@ -267,6 +276,9 @@ document.body.appendChild(pauseMenu);
 
 const pauseScore = document.createElement("h2");
 pauseMenu.appendChild(pauseScore);
+const pauseTotalScore = document.createElement("h3");
+pauseMenu.appendChild(pauseTotalScore);
+
 
 const resumeBtn = document.createElement("button");
 resumeBtn.textContent = "Resume";
@@ -320,7 +332,13 @@ function togglePause() {
   pauseMenu.style.display = gamePaused ? "flex" : "none";
   settingsPanel.style.display = "none";
   pauseScore.textContent = "Score: " + Math.floor(score);
+  pauseTotalScore.textContent = "Total Score: " + Math.floor(totalScore); 
+  pauseCurrency.textContent = "Currency: " + Math.floor(currency);
+  const pauseCurrency = document.createElement("h3");
+pauseMenu.appendChild(pauseCurrency);
+
 }
+
 
 resumeBtn.onclick = () => togglePause();
 settingsBtn.onclick = () => {
@@ -379,8 +397,25 @@ shopMenu.style.fontFamily = "system-ui";
 document.body.appendChild(shopMenu);
 
 const shopTitle = document.createElement("h1");
+const shopCurrencyDisplay = document.createElement("h3");
+shopCurrencyDisplay.style.marginTop = "10px";
+shopCurrencyDisplay.style.fontSize = "1.2em";
+shopCurrencyDisplay.style.textAlign = "center";
+shopCurrencyDisplay.textContent = "Current Currency: " + currency;
+shopMenu.appendChild(shopCurrencyDisplay);
+
 shopTitle.textContent = "GAME THEMES";
 shopMenu.appendChild(shopTitle);
+const ownedThemes = document.createElement("div");
+ownedThemes.style.marginTop = "20px";
+ownedThemes.style.fontSize = "1.2em";
+ownedThemes.style.textAlign = "center";
+shopMenu.appendChild(ownedThemes);
+//update owned themes
+function updateOwnedThemes() {
+  ownedThemes.textContent = "Owned Themes: " + purchasedThemes.join(", ");
+}
+updateOwnedThemes();
 
 const originalBtn = document.createElement("button");
 originalBtn.textContent = "🎮 Original";
@@ -404,10 +439,32 @@ originalBtn.onclick = () => {
 };
 
 retroBtn.onclick = () => {
-  gameTheme = "retro";
-  localStorage.setItem("gameTheme", gameTheme);
-  applyGameTheme();
-  shopMenu.style.display = "none";
+  const itemCost = 30; // : cost in currency
+  if (purchasedThemes.includes("retro")) {
+    gameTheme = "retro";
+    localStorage.setItem("gameTheme", gameTheme);
+    applyGameTheme();
+    shopMenu.style.display = "none";
+  } else if (currency >= itemCost) {
+  // spend currency
+    currency -= itemCost;
+    localStorage.setItem("currency", currency);
+
+    purchasedThemes.push("retro");
+    localStorage.setItem("purchasedThemes", JSON.stringify(purchasedThemes));
+
+    applyGameTheme();
+    shopMenu.style.display = "none";
+
+    // Update displays
+    updateOwnedThemes();
+    pauseCurrency.textContent = "Currency: " + Math.floor(currency);
+    shopCurrencyDisplay.textContent = "Current Currency: " + currency;
+
+    alert("Retro theme purchased!");
+  } else {
+    alert("Not enough currency!");
+  }
 };
 
 // ===== OFFLINE STATUS =====
@@ -501,6 +558,7 @@ function applyGameTheme() {
   }
 }
 applyGameTheme();
+updateOwnedThemes();
 
 // ===== BUBBLES =====
 function drawBubbles() {
@@ -616,6 +674,11 @@ function checkCollision() {
     if (!ob.passed && ob.x + obstacleWidth < robotX) {
       ob.passed = true;
       score += scoreMultiplier;
+      totalScore += scoreMultiplier; // add to total score
+localStorage.setItem("totalScore", totalScore); // save persistently
+currency += 1; // reward 1 currency per obstacle passed
+localStorage.setItem("currency", currency);
+
       if (score > highscore) {
         highscore = score;
         localStorage.setItem("highScore", highscore);
@@ -742,6 +805,7 @@ const handleScrollAnimation = () => {
 };
 window.addEventListener('scroll', handleScrollAnimation);
 handleScrollAnimation();
+
 </script>
 
      
